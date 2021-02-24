@@ -10,6 +10,7 @@
     "build": "webpack --env.production=true --progress --hide-modules"
   },
   "dependencies": {
+    "stylelint-scss": "^3.19.0",
     "vue": "^2.6.11",
     "vue-router": "^3.1.5"
   },
