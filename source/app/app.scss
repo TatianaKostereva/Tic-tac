@@ -1,0 +1,25 @@
+.field {
+  display: table;
+  margin: 20px;
+}
+
+.cell {
+  background: #30d5c8;
+  text-align: center;
+  line-height: 2em;
+  border: 1px solid;
+  height: 64px;
+  width: 64px;
+  font-size: 30px;
+}
+
+.button {
+  margin: 20px;
+}
+
+.message {
+  margin: 20px;
+  padding: 5px;
+  border: 1px solid #30d5c8;
+  text-align: center;
+}
