@@ -1,5 +1,5 @@
 export const constants = {
-  SIZE: 3,
+  MATRIXSIZE: 3,
   EMPTY: 0,
   PLAYER1: 1,
   PLAYER2: 2,

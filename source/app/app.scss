@@ -18,8 +18,74 @@
 }
 
 .message {
-  margin: 20px;
-  padding: 5px;
+  margin: 20px 0 5px 0;
+  padding: 10px;
   border: 1px solid #30d5c8;
   text-align: center;
+}
+
+.line {
+  color: wheat;
+}
+
+.line.leftdiagonal {
+  position: absolute;
+  top: 106px;
+  left: -31px;
+  transform: rotate(45deg);
+  width: 289px;
+  z-index: 1;
+}
+
+.line.rightdiagonal {
+  position: absolute;
+  top: 106px;
+  left: -31px;
+  transform: rotate(135deg);
+  width: 289px;
+}
+
+.line.row0 {
+  position: absolute;
+  top: 36px;
+  left: 10px;
+  width: 207px;
+}
+
+.line.row1 {
+  position: absolute;
+  top: 106px;
+  left: 10px;
+  width: 207px;
+}
+
+.line.row2 {
+  position: absolute;
+  top: 174px;
+  left: 10px;
+  width: 207px;
+}
+
+.line.column0 {
+  position: absolute;
+  top: 105px;
+  left: -60px;
+  width: 207px;
+  transform: rotate(90deg);
+}
+
+.line.column1 {
+  position: absolute;
+  top: 105px;
+  left: 10px;
+  width: 207px;
+  transform: rotate(90deg);
+}
+
+.line.column2 {
+  position: absolute;
+  top: 105px;
+  left: 80px;
+  width: 207px;
+  transform: rotate(90deg);
 }
