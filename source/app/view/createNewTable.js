@@ -16,4 +16,6 @@ export const createNewTable = (root) => {
       cell.setAttribute('data-y', j);
     }
   }
+
+  return table;
 };
