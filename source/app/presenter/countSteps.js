@@ -5,27 +5,28 @@ import checkVictory from './checkVictory.js';
 import createMessage from '../view/createMessage.js';
 import createLine from '../view/createLine.js';
 
-const countSteps = (x, y, matrix, currentPlayer, root) => {
-  if (matrix[x][y] === DEFAULT_VALUE) {
-    matrix[x][y] = currentPlayer;
+const countSteps = (game, x, y) => {
+  if (game.matrix[x][y] !== DEFAULT_VALUE) {
+    return;
   }
+  game.matrix[x][y] = game.currentPlayer;
 
   const cell = document.querySelector(`[data-x='${x}'][data-y='${y}']`);
-  cell.innerText = (currentPlayer === PLAYER1) ? 'X' : 'O';
-  cell.classList.add(`cell-${currentPlayer}`);
+  cell.innerText = (game.currentPlayer === PLAYER1) ? 'X' : 'O';
+  cell.classList.add(`cell-${game.currentPlayer}`);
 
-  const winPlayer = checkVictory(matrix);
+  const winPlayer = checkVictory(game.matrix);
 
   if (winPlayer === null) {
     return;
   }
 
   if (winPlayer === 'Draw!') {
-    createMessage('Draw!', root);
+    createMessage('Draw!', game.root);
   } else {
     const playerName = (winPlayer.numberOfPlayer === '1') ? FIRST_PLAYER : SECOND_PLAYER;
-    createMessage(`The ${playerName} wins!`, root);
-    createLine(root, winPlayer.numberOfCombination);
+    createMessage(`The ${playerName} wins!`, game.root);
+    createLine(game.root, winPlayer.numberOfCombination);
   }
 };
 

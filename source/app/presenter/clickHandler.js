@@ -1,7 +1,7 @@
 import { PLAYER1, PLAYER2 } from '../model/constants/constants.js';
 import countSteps from './countSteps.js';
 
-const initCellClickHandler = (matrix, root, currentPlayer) => {
+const initCellClickHandler = (game) => {
   const tableElement = document.querySelector('.field');
   const cellElement = tableElement.querySelectorAll('.cell');
 
@@ -11,8 +11,8 @@ const initCellClickHandler = (matrix, root, currentPlayer) => {
         const x = event.target.getAttribute('data-x');
         const y = event.target.getAttribute('data-y');
 
-        countSteps(x, y, matrix, currentPlayer, root);
-        currentPlayer = currentPlayer === PLAYER1 ? PLAYER2 : PLAYER1;
+        countSteps(game, x, y);
+        game.currentPlayer = game.currentPlayer === PLAYER1 ? PLAYER2 : PLAYER1;
       }
     });
   });

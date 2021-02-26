@@ -11,9 +11,15 @@ export const app = (root) => {
   button.innerText = 'Restart game';
 
   renderField(root);
+  const matrix = createField();
 
-  let matrix = createField();
-  const currentPlayer = PLAYER1;
+  const game = {
+    matrix,
+    currentPlayer: PLAYER1,
+    root,
+  };
+
+  initCellClickHandler(game);
 
   button.addEventListener('click', () => {
     const message = document.querySelector('.message');
@@ -30,9 +36,8 @@ export const app = (root) => {
     const tableElement = document.querySelector('.field');
     tableElement.remove();
     renderField(root);
-    matrix = createField();
-    initCellClickHandler(matrix, root, currentPlayer);
+    game.matrix = createField();
+    game.currentPlayer = PLAYER1;
+    initCellClickHandler(game);
   });
-
-  initCellClickHandler(matrix, root, currentPlayer);
 };
