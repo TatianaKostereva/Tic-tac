@@ -1,22 +1,19 @@
-import { createNewTable } from './view/createNewTable.js';
-import { initGame } from './model/initGame.js';
-import { constants } from './model/constants/constants.js';
+import renderField from './view/renderField.js';
+import createField from './model/createField.js';
+import { PLAYER1 } from './model/constants/constants.js';
 import { appendElement } from './helpers/appendElement.js';
-import { clickHandler } from './presenter/clickHandler.js';
+import initCellClickHandler from './presenter/clickHandler.js';
 import './app.scss';
 
-export const app = () => {
-  const root = document.querySelector('.root');
-  root.textContent = '';
-
+export const app = (root) => {
   const button = document.createElement('button');
   appendElement(button, 'button', root);
   button.innerText = 'Restart game';
 
-  createNewTable(root);
+  renderField(root);
 
-  let matrix = initGame();
-  const currentPlayer = constants.PLAYER1;
+  let matrix = createField();
+  const currentPlayer = PLAYER1;
 
   button.addEventListener('click', () => {
     const message = document.querySelector('.message');
@@ -30,12 +27,12 @@ export const app = () => {
       line.remove();
     }
 
-    const tableElement = document.querySelector('.table');
+    const tableElement = document.querySelector('.field');
     tableElement.remove();
-    createNewTable(root);
-    matrix = initGame();
-    clickHandler(matrix, root, currentPlayer);
+    renderField(root);
+    matrix = createField();
+    initCellClickHandler(matrix, root, currentPlayer);
   });
 
-  clickHandler(matrix, root, currentPlayer);
+  initCellClickHandler(matrix, root, currentPlayer);
 };

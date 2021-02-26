@@ -1,6 +1,5 @@
 .field {
   display: table;
-  margin: 20px;
 }
 
 .cell {
@@ -28,7 +27,52 @@
   color: wheat;
 }
 
-.line.leftdiagonal {
+.lineCombination0 {
+  position: absolute;
+  top: 96px;
+  left: 10px;
+  width: 207px;
+}
+
+.lineCombination2 {
+  position: absolute;
+  top: 166px;
+  left: 10px;
+  width: 207px;
+}
+
+.lineCombination4 {
+  position: absolute;
+  top: 234px;
+  left: 10px;
+  width: 207px;
+}
+
+.lineCombination1 {
+  position: absolute;
+  top: 165px;
+  left: -60px;
+  width: 207px;
+  transform: rotate(90deg);
+}
+
+.lineCombination3 {
+  position: absolute;
+  top: 165px;
+  left: 10px;
+  width: 207px;
+  transform: rotate(90deg);
+}
+
+.lineCombination5 {
+  position: absolute;
+  top: 165px;
+  left: 80px;
+  width: 207px;
+  transform: rotate(90deg);
+}
+
+.lineCombination6 {
   position: absolute;
   top: 166px;
   left: -31px;
@@ -37,55 +81,10 @@
   z-index: 1;
 }
 
-.line.rightdiagonal {
+.lineCombination7 {
   position: absolute;
   top: 166px;
   left: -31px;
   transform: rotate(135deg);
   width: 289px;
-}
-
-.line.row0 {
-  position: absolute;
-  top: 96px;
-  left: 10px;
-  width: 207px;
-}
-
-.line.row1 {
-  position: absolute;
-  top: 166px;
-  left: 10px;
-  width: 207px;
-}
-
-.line.row2 {
-  position: absolute;
-  top: 234px;
-  left: 10px;
-  width: 207px;
-}
-
-.line.column0 {
-  position: absolute;
-  top: 165px;
-  left: -60px;
-  width: 207px;
-  transform: rotate(90deg);
-}
-
-.line.column1 {
-  position: absolute;
-  top: 165px;
-  left: 10px;
-  width: 207px;
-  transform: rotate(90deg);
-}
-
-.line.column2 {
-  position: absolute;
-  top: 165px;
-  left: 80px;
-  width: 207px;
-  transform: rotate(90deg);
 }

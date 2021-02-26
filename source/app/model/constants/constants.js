@@ -1,8 +1,6 @@
-export const constants = {
-  MATRIXSIZE: 3,
-  EMPTY: 0,
-  PLAYER1: 1,
-  PLAYER2: 2,
-  FIRSTPLAYER: 'first player',
-  SECONDPLAYER: 'second player',
-};
+export const MATRIX_SIZE = 3;
+export const DEFAULT_VALUE = 0;
+export const PLAYER1 = 1;
+export const PLAYER2 = 2;
+export const FIRST_PLAYER = 'first player';
+export const SECOND_PLAYER = 'second player';

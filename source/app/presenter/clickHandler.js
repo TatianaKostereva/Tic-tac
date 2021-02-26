@@ -1,8 +1,8 @@
-import { constants } from '../model/constants/constants.js';
-import { countSteps } from './countSteps.js';
+import { PLAYER1, PLAYER2 } from '../model/constants/constants.js';
+import countSteps from './countSteps.js';
 
-export const clickHandler = (matrix, root, currentPlayer) => {
-  const tableElement = document.querySelector('.table');
+const initCellClickHandler = (matrix, root, currentPlayer) => {
+  const tableElement = document.querySelector('.field');
   const cellElement = tableElement.querySelectorAll('.cell');
 
   cellElement.forEach((cell) => {
@@ -12,8 +12,10 @@ export const clickHandler = (matrix, root, currentPlayer) => {
         const y = event.target.getAttribute('data-y');
 
         countSteps(x, y, matrix, currentPlayer, root);
-        currentPlayer = currentPlayer === constants.PLAYER1 ? constants.PLAYER2 : constants.PLAYER1;
+        currentPlayer = currentPlayer === PLAYER1 ? PLAYER2 : PLAYER1;
       }
     });
   });
 };
+
+export default initCellClickHandler;

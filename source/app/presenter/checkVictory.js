@@ -1,79 +1,59 @@
-import { constants } from '../model/constants/constants.js';
-import { initGame } from '../model/initGame.js';
-import { createMessage } from '../view/createMessage.js';
-import { checkCombination } from './checkCombination.js';
+import { MATRIX_SIZE, DEFAULT_VALUE } from '../model/constants/constants.js';
 
-export const checkVictory = (player1, playerName1, player2, playerName2, matrix, root) => {
-  let rightDiagonalCount1 = 0;
-  let rightDiagonalCount2 = 0;
-  let leftDiagonalCount1 = 0;
-  let leftDiagonalCount2 = 0;
-  const rowCount1 = {
-    0: 0,
-    1: 0,
-    2: 0,
-  };
-  const columnCount1 = {
-    0: 0,
-    1: 0,
-    2: 0,
-  };
-  const rowCount2 = {
-    0: 0,
-    1: 0,
-    2: 0,
-  };
-  const columnCount2 = {
-    0: 0,
-    1: 0,
-    2: 0,
-  };
+const checkVictory = (matrix) => {
+  const playLines = [];
 
-  for (let i = 0; i < constants.MATRIXSIZE; i += 1) {
-    for (let j = 0; j < constants.MATRIXSIZE; j += 1) {
-      if (matrix[i][j] === player1) {
-        rowCount1[i] += 1;
-      } else if (matrix[i][j] === player2) {
-        rowCount2[i] += 1;
-      }
+  for (let i = 0; i < MATRIX_SIZE; i += 1) {
+    const row = [];
+    const column = [];
+    for (let j = 0; j < MATRIX_SIZE; j += 1) {
+      row.push(matrix[i][j]);
+      column.push(matrix[j][i]);
+    }
+    playLines.push(row);
+    playLines.push(column);
+  }
 
-      if (matrix[j][i] === player1) {
-        columnCount1[i] += 1;
-      } else if (matrix[j][i] === player2) {
-        columnCount2[i] += 1;
+  const leftDiagonal = [];
+  const rightDiagonal = [];
+  for (let i = 0; i < MATRIX_SIZE; i += 1) {
+    leftDiagonal.push(matrix[i][i]);
+    rightDiagonal.push(matrix[MATRIX_SIZE - 1 - i][i]);
+  }
+  playLines.push(leftDiagonal);
+  playLines.push(rightDiagonal);
+
+  let quantityLinesHasStepsOfTwoPlayers = 0;
+  for (let i = 0; i < playLines.length; i += 1) {
+    const mapOfQuantitySteps = {};
+    for (let j = 0; j < playLines[i].length; j += 1) {
+      if (playLines[i][j] !== DEFAULT_VALUE) {
+        if (!mapOfQuantitySteps[playLines[i][j]]) {
+          mapOfQuantitySteps[playLines[i][j]] = 0;
+        }
+        mapOfQuantitySteps[playLines[i][j]] += 1;
       }
     }
 
-    if (matrix[i][i] === player1) {
-      leftDiagonalCount1 += 1;
-    } else if (matrix[i][i] === player2) {
-      leftDiagonalCount2 += 1;
-    }
-
-    if (matrix[i][constants.MATRIXSIZE - 1 - i] === player1) {
-      rightDiagonalCount1 += 1;
-    } else if (matrix[i][constants.MATRIXSIZE - 1 - i] === player2) {
-      rightDiagonalCount2 += 1;
-    }
-
-    checkCombination(rowCount1[i], playerName1, root, 'row', i);
-    checkCombination(columnCount1[i], playerName1, root, 'column', i);
-    checkCombination(leftDiagonalCount1, playerName1, root, 'leftdiagonal');
-    checkCombination(rightDiagonalCount1, playerName1, root, 'rightdiagonal');
-
-    checkCombination(rowCount2[i], playerName2, root, 'row', i);
-    checkCombination(columnCount2[i], playerName2, root, 'column', i);
-    checkCombination(leftDiagonalCount2, playerName2, root, 'leftdiagonal');
-    checkCombination(rightDiagonalCount2, playerName2, root, 'rightdiagonal');
-
-    if (
-      rowCount1[i] > 0 && rowCount2[i] > 0
-        && columnCount1[i] > 0 && columnCount2[i] > 0
-        && leftDiagonalCount1 > 0 && leftDiagonalCount2 > 0
-        && rightDiagonalCount1 > 0 && rightDiagonalCount2 > 0
+    const players = Object.keys(mapOfQuantitySteps);
+    if (players.length > 1) {
+      quantityLinesHasStepsOfTwoPlayers += 1;
+    } else if (
+      players.length === 1
+      && mapOfQuantitySteps[players[0]] === MATRIX_SIZE
     ) {
-      createMessage('Draw!', root);
-      matrix = initGame();
+      return {
+        numberOfPlayer: players[0],
+        numberOfCombination: i,
+      };
     }
   }
+
+  if (quantityLinesHasStepsOfTwoPlayers === playLines.length) {
+    return 'Draw!';
+  }
+
+  return null;
 };
+
+export default checkVictory;
