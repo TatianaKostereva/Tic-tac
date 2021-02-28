@@ -1,4 +1,8 @@
 import './index.scss';
-import { app } from './app/app.js';
+import App from './app/app.js';
+import { FIELD_SIZE } from './app/model/constants/constants.js';
 
-app();
+const root = document.querySelector('.root');
+
+const game = new App(FIELD_SIZE, root);
+game.init();
