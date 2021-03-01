@@ -1,20 +1,20 @@
 import GameObject from './gameObject.js';
 
 class Computer extends GameObject {
-  randomStep(x, y, field, fieldSize, view, defaultValue) {
-    let i = Math.floor(Math.random() * fieldSize);
-    let j = Math.floor(Math.random() * fieldSize);
-    let n = 0;
-    const numberOfStep = (fieldSize * fieldSize - 1) / 2;
+  randomStep() {
+    let x;
+    let y;
 
-    while (field[i][j] !== defaultValue && n <= numberOfStep) {
-      i = Math.floor(Math.random() * fieldSize);
-      j = Math.floor(Math.random() * fieldSize);
-      n += 1;
-    }
+    do {
+      x = Math.floor(Math.random() * this.game.fieldSize);
+      y = Math.floor(Math.random() * this.game.fieldSize);
+    } while (!this.game.setStep(x, y));
 
-    field[i][j] = this.icon;
-    view.occupationCell(i, j, this.icon, this.numberOfPlayer);
+    return true;
+  }
+
+  initSetStep() {
+    return this.randomStep();
   }
 }
 
