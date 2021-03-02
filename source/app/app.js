@@ -5,7 +5,7 @@ import GameView from './view/gameView.js';
 class App {
   constructor(FIELD_SIZE, root) {
     this.root = root;
-    this.view = new GameView(this.root);
+    this.view = new GameView(this.root, FIELD_SIZE);
     this.game = new Game(FIELD_SIZE, this.view);
     this.view.renderButton('Restart game', this.restartGame.bind(this));
   }

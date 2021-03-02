@@ -2,8 +2,9 @@ import { DEFAULT_VALUE } from '../constants/constants.js';
 import addElement from '../helpers/addElement.js';
 
 class GameView {
-  constructor(root) {
+  constructor(root, FIELD_SIZE) {
     this.root = root;
+    this.fieldSize = FIELD_SIZE;
   }
 
   createMessage(messageText) {
@@ -11,14 +12,14 @@ class GameView {
     message.innerText = `${messageText}`;
   }
 
-  renderField(fieldModel, action) {
+  renderField(action) {
     const div = addElement('div', 'fieldModel', this.root);
     const field = addElement('table', 'field', div);
 
-    fieldModel.forEach((_, i) => {
+    for (let i = 0; i < this.fieldSize; i += 1) {
       const row = addElement('tr', 'row', field);
 
-      fieldModel.forEach((__, j) => {
+      for (let j = 0; j < this.fieldSize; j += 1) {
         const cell = addElement('td', 'cell', row);
         cell.setAttribute('data-x', i);
         cell.setAttribute('data-y', j);
@@ -28,8 +29,8 @@ class GameView {
           const y = event.target.getAttribute('data-y');
           action(x, y);
         });
-      });
-    });
+      }
+    }
   }
 
   clearField() {
@@ -75,7 +76,7 @@ class GameView {
   clear() {
     for (let i = 0; i < this.fieldSize; i += 1) {
       for (let j = 0; j < this.fieldSize; j += 1) {
-        this.field[i][j] = DEFAULT_VALUE;
+        this.field[`${i}${j}`] = DEFAULT_VALUE;
       }
     }
   }

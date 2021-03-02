@@ -10,7 +10,7 @@ class Game {
       new Computer('O', this),
     ];
     this.activePlayer = -1;
-    this.field = [];
+    this.field = {};
     this.fieldSize = FIELD_SIZE;
     this.view = view;
   }
@@ -18,14 +18,13 @@ class Game {
   initGame() {
     this.generateField();
     this.setNextActivePlayer();
-    this.view.renderField(this.field, this.setStep.bind(this));
+    this.view.renderField(this.setStep.bind(this));
   }
 
   generateField() {
     for (let i = 0; i < this.fieldSize; i += 1) {
-      this.field[i] = [];
       for (let j = 0; j < this.fieldSize; j += 1) {
-        this.field[i][j] = DEFAULT_VALUE;
+        this.field[`${i}${j}`] = DEFAULT_VALUE;
       }
     }
   }
@@ -36,13 +35,14 @@ class Game {
   }
 
   setStep(x, y) {
-    if (this.field[x][y] !== DEFAULT_VALUE) {
+    if (this.field[`${x}${y}`] !== DEFAULT_VALUE) {
       return false;
     }
     const { icon } = this.players[this.activePlayer];
 
-    this.field[x][y] = icon;
+    this.field[`${x}${y}`] = this.activePlayer;
     this.view.occupationCell(x, y, icon, this.activePlayer);
+
     if (this.checkWin()) {
       const win = this.checkWin();
       this.finishGame(win);
@@ -60,8 +60,8 @@ class Game {
       const row = [];
       const column = [];
       for (let j = 0; j < this.fieldSize; j += 1) {
-        row.push(this.field[i][j]);
-        column.push(this.field[j][i]);
+        row.push(this.field[`${i}${j}`]);
+        column.push(this.field[`${j}${i}`]);
       }
       playLines.push(row);
       playLines.push(column);
@@ -70,8 +70,8 @@ class Game {
     const leftDiagonal = [];
     const rightDiagonal = [];
     for (let i = 0; i < this.fieldSize; i += 1) {
-      leftDiagonal.push(this.field[i][i]);
-      rightDiagonal.push(this.field[this.fieldSize - 1 - i][i]);
+      leftDiagonal.push(this.field[`${i}${i}`]);
+      rightDiagonal.push(this.field[`${this.fieldSize - 1 - i}${i}`]);
     }
     playLines.push(leftDiagonal);
     playLines.push(rightDiagonal);
