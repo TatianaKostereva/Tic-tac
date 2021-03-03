@@ -27,7 +27,7 @@ class GameView {
         cell.addEventListener('click', (event) => {
           const x = event.target.getAttribute('data-x');
           const y = event.target.getAttribute('data-y');
-          action(x, y);
+          action(Number(x), Number(y));
         });
       }
     }
@@ -69,7 +69,32 @@ class GameView {
     occupationCell.classList.add(`cell-${numberOfPlayer}`);
   }
 
-  createLine(numberOfCombination) {
+  createLine(coordinates) {
+    let strForClassNameLine = '';
+    coordinates.forEach((cellCoordinates) => {
+      strForClassNameLine += `${cellCoordinates}_`;
+    });
+
+    let numberOfCombination = '';
+    switch (strForClassNameLine.slice(0, -1)) {
+      case '0,2_0,1_0,0': numberOfCombination = 0;
+        break;
+      case '2,0_1,0_0,0': numberOfCombination = 1;
+        break;
+      case '1,2_1,1_1,0': numberOfCombination = 2;
+        break;
+      case '2,1_1,1_0,1': numberOfCombination = 3;
+        break;
+      case '2,2_2,1_2,0': numberOfCombination = 4;
+        break;
+      case '2,2_1,2_0,2': numberOfCombination = 5;
+        break;
+      case '2,2_1,1_0,0': numberOfCombination = 6;
+        break;
+      default: numberOfCombination = 7;
+        break;
+    }
+
     addElement('hr', `lineCombination${numberOfCombination}`, this.root);
   }
 

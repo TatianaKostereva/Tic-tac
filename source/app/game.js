@@ -1,7 +1,7 @@
 import './app.scss';
 import Computer from './players/computer.js';
 import GameObject from './players/gameObject.js';
-import { DEFAULT_VALUE } from './constants/constants.js';
+import { DEFAULT_VALUE, WIN_LENGTH } from './constants/constants.js';
 
 class Game {
   constructor(FIELD_SIZE, view) {
@@ -9,7 +9,9 @@ class Game {
       new GameObject('X', this),
       new Computer('O', this),
     ];
+    this.stepCounter = 0;
     this.activePlayer = -1;
+    this.winLength = WIN_LENGTH;
     this.field = {};
     this.fieldSize = FIELD_SIZE;
     this.view = view;
@@ -24,7 +26,7 @@ class Game {
   generateField() {
     for (let i = 0; i < this.fieldSize; i += 1) {
       for (let j = 0; j < this.fieldSize; j += 1) {
-        this.field[`${i}${j}`] = DEFAULT_VALUE;
+        this.field[`${i},${j}`] = DEFAULT_VALUE;
       }
     }
   }
@@ -35,16 +37,18 @@ class Game {
   }
 
   setStep(x, y) {
-    if (this.field[`${x}${y}`] !== DEFAULT_VALUE) {
+    if (this.field[`${x},${y}`] !== DEFAULT_VALUE) {
       return false;
     }
+    this.stepCounter += 1;
     const { icon } = this.players[this.activePlayer];
 
-    this.field[`${x}${y}`] = this.activePlayer;
+    this.field[`${x},${y}`] = this.activePlayer;
     this.view.occupationCell(x, y, icon, this.activePlayer);
 
-    if (this.checkWin()) {
-      const win = this.checkWin();
+    const win = this.checkWin(x, y, this.field);
+    if (win) {
+      this.stepCounter = 0;
       this.finishGame(win);
     } else {
       this.setNextActivePlayer();
@@ -53,56 +57,96 @@ class Game {
     return true;
   }
 
-  checkWin() {
-    const playLines = [];
+  createConfig() {
+    const config = {
+      horizontal: {
+        forward(x, y, quantity) {
+          y += quantity;
+          return [x, y];
+        },
+        back(x, y, quantity) {
+          y -= quantity;
+          return [x, y];
+        },
+      },
+      vertical: {
+        forward(x, y, quantity) {
+          x += quantity;
+          return [x, y];
+        },
+        back(x, y, quantity) {
+          x -= quantity;
+          return [x, y];
+        },
+      },
+      diagonal: {
+        forward(x, y, quantity) {
+          x += quantity;
+          y += quantity;
+          return [x, y];
+        },
+        back(x, y, quantity) {
+          x -= quantity;
+          y -= quantity;
+          return [x, y];
+        },
+      },
+      rightDiagonal: {
+        forward(x, y, quantity) {
+          x -= quantity;
+          y += quantity;
+          return [x, y];
+        },
+        back(x, y, quantity) {
+          x += quantity;
+          y -= quantity;
+          return [x, y];
+        },
+      },
+    };
 
-    for (let i = 0; i < this.fieldSize; i += 1) {
-      const row = [];
-      const column = [];
-      for (let j = 0; j < this.fieldSize; j += 1) {
-        row.push(this.field[`${i}${j}`]);
-        column.push(this.field[`${j}${i}`]);
+    return config;
+  }
+
+  getStepCoordinates(x, y, field, cursorFunction) {
+    const coordinates = [];
+    for (let i = 1; i < this.winLength; i += 1) {
+      const [nextX, nextY] = cursorFunction(x, y, i);
+      if (field[`${nextX},${nextY}`] === this.activePlayer) {
+        coordinates.push([nextX, nextY]);
       }
-      playLines.push(row);
-      playLines.push(column);
+    }
+    return coordinates;
+  }
+
+
+  getLinesOfStepsCoordinates(x, y, field) {
+    const config = this.createConfig();
+    const lines = Object.values(config).map((lineConfig) => {
+      const stepForwardCoordinates = this
+        .getStepCoordinates(x, y, field, lineConfig.forward);
+      const stepBackCoordinates = this
+        .getStepCoordinates(x, y, field, lineConfig.back);
+
+      return [[x, y]].concat(stepForwardCoordinates, stepBackCoordinates);
+    });
+
+    return lines;
+  }
+
+
+  checkWin(x, y, field) {
+    const linesOfStepsCoordinates = this.getLinesOfStepsCoordinates(x, y, field);
+    const winLine = linesOfStepsCoordinates.find(line => line.length >= this.winLength);
+
+    if (winLine) {
+      return {
+        numberOfPlayer: this.activePlayer,
+        coordinates: winLine,
+      };
     }
 
-    const leftDiagonal = [];
-    const rightDiagonal = [];
-    for (let i = 0; i < this.fieldSize; i += 1) {
-      leftDiagonal.push(this.field[`${i}${i}`]);
-      rightDiagonal.push(this.field[`${this.fieldSize - 1 - i}${i}`]);
-    }
-    playLines.push(leftDiagonal);
-    playLines.push(rightDiagonal);
-
-    let quantityLinesHasStepsOfTwoPlayers = 0;
-    for (let i = 0; i < playLines.length; i += 1) {
-      const mapOfQuantitySteps = {};
-      for (let j = 0; j < playLines[i].length; j += 1) {
-        if (playLines[i][j] !== DEFAULT_VALUE) {
-          if (!mapOfQuantitySteps[playLines[i][j]]) {
-            mapOfQuantitySteps[playLines[i][j]] = 0;
-          }
-          mapOfQuantitySteps[playLines[i][j]] += 1;
-        }
-      }
-
-      const players = Object.keys(mapOfQuantitySteps);
-      if (players.length > 1) {
-        quantityLinesHasStepsOfTwoPlayers += 1;
-      } else if (
-        players.length === 1
-        && mapOfQuantitySteps[players[0]] === this.fieldSize
-      ) {
-        return {
-          numberOfPlayer: players[0],
-          numberOfCombination: i,
-        };
-      }
-    }
-
-    if (quantityLinesHasStepsOfTwoPlayers === playLines.length) {
+    if (this.stepCounter === this.fieldSize * this.fieldSize) {
       return 'Draw!';
     }
 
@@ -119,13 +163,13 @@ class Game {
       return false;
     }
 
-    if (this.players[this.activePlayer] instanceof Computer) {
+    if (this.activePlayer === 1) {
       this.view.createMessage('You lost');
-      this.view.createLine(win.numberOfCombination);
+      this.view.createLine(win.coordinates);
       return true;
     }
     this.view.createMessage('You won!');
-    this.view.createLine(win.numberOfCombination);
+    this.view.createLine(win.coordinates);
     return true;
   }
 }
