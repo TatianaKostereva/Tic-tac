@@ -1,20 +1,39 @@
-import GameObject from './gameObject.js';
+import { DEFAULT_VALUE } from '../constants/constants.js';
+import { createConfigForCheckSetStep } from '../helpers/createConfigForCheckSetStep.js';
 
-class Computer extends GameObject {
-  randomStep() {
-    let x;
-    let y;
-
-    do {
-      x = Math.floor(Math.random() * this.game.fieldSize);
-      y = Math.floor(Math.random() * this.game.fieldSize);
-    } while (!this.game.setStep(x, y));
-
-    return true;
+class Computer {
+  constructor(icon, game) {
+    this.icon = icon;
+    this.game = game;
   }
 
-  initSetStep() {
-    return this.randomStep();
+  getPossibleStepCoordinates(x, y, cursorFunction) {
+    const coordinates = [];
+    const [nextX, nextY] = cursorFunction(x, y, 1);
+    if (this.game.field[`${nextX},${nextY}`] === DEFAULT_VALUE) {
+      coordinates.push({ x: nextX, y: nextY });
+    }
+    return coordinates;
+  }
+
+  getCoordinatesFromCoordinatesOfPlayer(x, y) {
+    const config = createConfigForCheckSetStep();
+    const arrOflinesWithCoordinates = Object.values(config).map((lineConfig) => {
+      const stepForwardCoordinates = this.getPossibleStepCoordinates(x, y, lineConfig.forward);
+      const stepBackCoordinates = this.getPossibleStepCoordinates(x, y, lineConfig.back);
+
+      return stepForwardCoordinates.concat(stepBackCoordinates);
+    });
+
+    const arrWithCoordinates = arrOflinesWithCoordinates
+      .reduce((acc, line) => acc.concat(line), []);
+
+    const randomNumber = Math.floor(Math.random() * arrWithCoordinates.length);
+
+    const cellForStep = arrWithCoordinates[randomNumber];
+    this.game.setStep(cellForStep.x, cellForStep.y);
+
+    return arrWithCoordinates;
   }
 }
 

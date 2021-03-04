@@ -1,12 +1,13 @@
 import './app.scss';
 import Computer from './players/computer.js';
-import GameObject from './players/gameObject.js';
+import Player from './players/player.js';
+import { createConfigForCheckSetStep } from './helpers/createConfigForCheckSetStep.js';
 import { DEFAULT_VALUE, WIN_LENGTH } from './constants/constants.js';
 
 class Game {
   constructor(FIELD_SIZE, view) {
     this.players = [
-      new GameObject('X', this),
+      new Player('X'),
       new Computer('O', this),
     ];
     this.stepCounter = 0;
@@ -31,9 +32,12 @@ class Game {
     }
   }
 
-  setNextActivePlayer() {
+  setNextActivePlayer(x, y) {
     this.activePlayer = (this.activePlayer === this.players.length - 1) ? 0 : this.activePlayer + 1;
-    this.players[this.activePlayer].initSetStep();
+
+    if (this.activePlayer === 1) {
+      this.players[this.activePlayer].getCoordinatesFromCoordinatesOfPlayer(x, y);
+    }
   }
 
   setStep(x, y) {
@@ -51,61 +55,10 @@ class Game {
       this.stepCounter = 0;
       this.finishGame(win);
     } else {
-      this.setNextActivePlayer();
+      this.setNextActivePlayer(x, y);
     }
 
     return true;
-  }
-
-  createConfig() {
-    const config = {
-      horizontal: {
-        forward(x, y, quantity) {
-          y += quantity;
-          return [x, y];
-        },
-        back(x, y, quantity) {
-          y -= quantity;
-          return [x, y];
-        },
-      },
-      vertical: {
-        forward(x, y, quantity) {
-          x += quantity;
-          return [x, y];
-        },
-        back(x, y, quantity) {
-          x -= quantity;
-          return [x, y];
-        },
-      },
-      diagonal: {
-        forward(x, y, quantity) {
-          x += quantity;
-          y += quantity;
-          return [x, y];
-        },
-        back(x, y, quantity) {
-          x -= quantity;
-          y -= quantity;
-          return [x, y];
-        },
-      },
-      rightDiagonal: {
-        forward(x, y, quantity) {
-          x -= quantity;
-          y += quantity;
-          return [x, y];
-        },
-        back(x, y, quantity) {
-          x += quantity;
-          y -= quantity;
-          return [x, y];
-        },
-      },
-    };
-
-    return config;
   }
 
   getStepCoordinates(x, y, cursorFunction) {
@@ -113,31 +66,28 @@ class Game {
     for (let i = 1; i < this.winLength; i += 1) {
       const [nextX, nextY] = cursorFunction(x, y, i);
       if (this.field[`${nextX},${nextY}`] === this.activePlayer) {
-        coordinates.push([nextX, nextY]);
+        coordinates.push({ x: nextX, y: nextY });
       }
     }
     return coordinates;
   }
 
-
   getLinesOfStepsCoordinates(x, y) {
-    const config = this.createConfig();
+    const config = createConfigForCheckSetStep();
     const lines = Object.values(config).map((lineConfig) => {
       const stepForwardCoordinates = this
         .getStepCoordinates(x, y, lineConfig.forward);
       const stepBackCoordinates = this
         .getStepCoordinates(x, y, lineConfig.back);
 
-      return [[x, y]].concat(stepForwardCoordinates, stepBackCoordinates);
+      return [{ x, y }].concat(stepForwardCoordinates, stepBackCoordinates);
     });
-
     return lines;
   }
 
-
   checkWin(x, y) {
     const linesOfStepsCoordinates = this.getLinesOfStepsCoordinates(x, y);
-    const winLine = linesOfStepsCoordinates.find(line => line.length >= this.winLength);
+    const winLine = linesOfStepsCoordinates.find(line => line.length === this.winLength);
 
     if (winLine) {
       return {

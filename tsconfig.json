@@ -34,7 +34,7 @@
     ]
   },
   "include": [
-    "source/**/*.ts", "source/index.js", "source/app/players/gameObject.js",
+    "source/**/*.ts", "source/index.js", "source/app/players/player.js",
   ],
   "exclude": [
     "node_modules",
