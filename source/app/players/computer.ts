@@ -1,22 +1,30 @@
 import { DEFAULT_VALUE } from '../constants/constants.js';
 import { createConfigForCheckSetStep } from '../helpers/createConfigForCheckSetStep.js';
 
+type CursorFunctionArgsType = { x: number; y: number; quantity: number };
+type CursorFunctionReturnType = [number, number];
+
 class Computer {
-  constructor(icon, game) {
+  constructor(icon: string, game: object) {
     this.icon = icon;
     this.game = game;
   }
 
-  getPossibleStepCoordinates(x, y, cursorFunction) {
+  getPossibleStepCoordinates( x: number, y: number, cursorFunction: ({
+    x,
+    y,
+    quantity,
+  }: CursorFunctionArgsType) => CursorFunctionReturnType
+  ) {
     const coordinates = [];
-    const [nextX, nextY] = cursorFunction(x, y, 1);
+    const [nextX, nextY] = cursorFunction({ x, y, quantity: 1 });
     if (this.game.field[`${nextX},${nextY}`] === DEFAULT_VALUE) {
       coordinates.push({ x: nextX, y: nextY });
     }
     return coordinates;
   }
 
-  getCoordinatesFromCoordinatesOfPlayer(x, y) {
+  getCoordinatesFromCoordinatesOfPlayer(x: number, y: number) {
     const config = createConfigForCheckSetStep();
     const arrOflinesWithCoordinates = Object.values(config).map((lineConfig) => {
       const stepForwardCoordinates = this.getPossibleStepCoordinates(x, y, lineConfig.forward);
