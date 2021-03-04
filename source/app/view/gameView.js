@@ -91,11 +91,15 @@ class GameView {
         break;
       case '2,2_1,1_0,0': numberOfCombination = 6;
         break;
-      default: numberOfCombination = 7;
+      case '2,0_1,1_1,0': numberOfCombination = 7;
+        break;
+      default: numberOfCombination = '';
         break;
     }
 
-    addElement('hr', `lineCombination${numberOfCombination}`, this.root);
+    if (numberOfCombination !== '') {
+      addElement('hr', `lineCombination${numberOfCombination}`, this.root);
+    }
   }
 
   clear() {

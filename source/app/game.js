@@ -46,7 +46,7 @@ class Game {
     this.field[`${x},${y}`] = this.activePlayer;
     this.view.occupationCell(x, y, icon, this.activePlayer);
 
-    const win = this.checkWin(x, y, this.field);
+    const win = this.checkWin(x, y);
     if (win) {
       this.stepCounter = 0;
       this.finishGame(win);
@@ -108,11 +108,11 @@ class Game {
     return config;
   }
 
-  getStepCoordinates(x, y, field, cursorFunction) {
+  getStepCoordinates(x, y, cursorFunction) {
     const coordinates = [];
     for (let i = 1; i < this.winLength; i += 1) {
       const [nextX, nextY] = cursorFunction(x, y, i);
-      if (field[`${nextX},${nextY}`] === this.activePlayer) {
+      if (this.field[`${nextX},${nextY}`] === this.activePlayer) {
         coordinates.push([nextX, nextY]);
       }
     }
@@ -120,13 +120,13 @@ class Game {
   }
 
 
-  getLinesOfStepsCoordinates(x, y, field) {
+  getLinesOfStepsCoordinates(x, y) {
     const config = this.createConfig();
     const lines = Object.values(config).map((lineConfig) => {
       const stepForwardCoordinates = this
-        .getStepCoordinates(x, y, field, lineConfig.forward);
+        .getStepCoordinates(x, y, lineConfig.forward);
       const stepBackCoordinates = this
-        .getStepCoordinates(x, y, field, lineConfig.back);
+        .getStepCoordinates(x, y, lineConfig.back);
 
       return [[x, y]].concat(stepForwardCoordinates, stepBackCoordinates);
     });
@@ -135,8 +135,8 @@ class Game {
   }
 
 
-  checkWin(x, y, field) {
-    const linesOfStepsCoordinates = this.getLinesOfStepsCoordinates(x, y, field);
+  checkWin(x, y) {
+    const linesOfStepsCoordinates = this.getLinesOfStepsCoordinates(x, y);
     const winLine = linesOfStepsCoordinates.find(line => line.length >= this.winLength);
 
     if (winLine) {
