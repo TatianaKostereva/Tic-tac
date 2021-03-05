@@ -5,6 +5,8 @@ import { createConfigForCheckSetStep } from './helpers/createConfigForCheckSetSt
 import { DEFAULT_VALUE, WIN_LENGTH } from './constants/constants';
 
 class Game {
+  // public activePlayer: number;
+
   constructor(FIELD_SIZE, view) {
     this.players = [new Player('X'), new Computer('O', this)];
     this.stepCounter = 0;
@@ -29,18 +31,19 @@ class Game {
     }
   }
 
-  setNextActivePlayer(x, y) {
+  setNextActivePlayer(coordinates) {
     this.activePlayer = this.activePlayer === this.players.length - 1 ? 0 : this.activePlayer + 1;
 
     if (this.activePlayer === 1) {
-      this.players[this.activePlayer].getCoordinatesFromCoordinatesOfPlayer([
-        x,
-        y,
-      ]);
+      this.players[this.activePlayer].getCoordinatesFromCoordinatesOfPlayer(
+        coordinates,
+      );
     }
   }
 
-  setStep(x, y) {
+  setStep(coordinates) {
+    console.log(coordinates);
+    const [x, y] = coordinates;
     if (this.field[`${x},${y}`] !== DEFAULT_VALUE) {
       return false;
     }
@@ -48,49 +51,56 @@ class Game {
     const { icon } = this.players[this.activePlayer];
 
     this.field[`${x},${y}`] = this.activePlayer;
-    this.view.occupationCell(x, y, icon, this.activePlayer);
+    console.log(coordinates);
+    this.view.occupationCell({
+      coordinates,
+      icon,
+      numberOfPlayer: this.activePlayer,
+    });
 
-    const win = this.checkWin(x, y);
+    const win = this.checkWin(coordinates);
     if (win) {
       this.stepCounter = 0;
       this.finishGame(win);
     } else {
-      this.setNextActivePlayer(x, y);
+      this.setNextActivePlayer(coordinates);
     }
 
     return true;
   }
 
-  getStepCoordinates([x, y], cursorFunction) {
-    const coordinates = [];
+  getStepCoordinates(coordinates, cursorFunction) {
+    const coordinatesArr = [];
     for (let i = 1; i < this.winLength; i += 1) {
-      const [nextX, nextY] = cursorFunction([x, y], i);
+      const [nextX, nextY] = cursorFunction(coordinates, i);
       if (this.field[`${nextX},${nextY}`] === this.activePlayer) {
-        coordinates.push([nextX, nextY]);
+        coordinatesArr.push([nextX, nextY]);
       }
     }
-    return coordinates;
+    return coordinatesArr;
   }
 
-  getLinesOfStepsCoordinates(x, y) {
+  getLinesOfStepsCoordinates(coordinates) {
     const config = createConfigForCheckSetStep();
     const lines = Object.values(config).map(lineConfig => {
       const stepForwardCoordinates = this.getStepCoordinates(
-        [x, y],
+        coordinates,
         lineConfig.forward,
       );
       const stepBackCoordinates = this.getStepCoordinates(
-        [x, y],
+        coordinates,
         lineConfig.back,
       );
 
-      return [[x, y]].concat(stepForwardCoordinates, stepBackCoordinates);
+      return [coordinates].concat(stepForwardCoordinates, stepBackCoordinates);
     });
     return lines;
   }
 
-  checkWin(x, y) {
-    const linesOfStepsCoordinates = this.getLinesOfStepsCoordinates(x, y);
+  checkWin(coordinates) {
+    const linesOfStepsCoordinates = this.getLinesOfStepsCoordinates(
+      coordinates,
+    );
     const winLine = linesOfStepsCoordinates.find(
       line => line.length === this.winLength,
     );

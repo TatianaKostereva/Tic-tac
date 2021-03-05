@@ -56,7 +56,7 @@ class Computer {
 
     const cellForStep = arrWithCoordinates[randomNumber];
     const [x, y] = cellForStep;
-    this.game.setStep(x, y);
+    this.game.setStep([x, y]);
 
     return arrWithCoordinates;
   }

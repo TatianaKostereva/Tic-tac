@@ -39,3 +39,11 @@ export interface GetPossibleStepCoordinatesArgs {
   quantity: number;
   cursorFunction: CursorFunctionType;
 }
+
+export type actionType = (coordinates: CoordinatesType) => Boolean;
+
+export type occupationCellArgs = {
+  coordinates: CoordinatesType;
+  icon: string;
+  numberOfPlayer: number;
+};
