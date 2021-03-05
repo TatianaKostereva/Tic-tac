@@ -22,7 +22,20 @@ export type ConfigForCheckType = {
 };
 
 export interface GameInterface {
+  activePlayer: number;
+  field: Object;
+  fieldSize: number;
+  players: [];
+  stepCounter: number;
+  view: Record<string, any>;
+  winLength: number;
   initGame: () => void;
   generateField: () => void;
   setNextActivePlayer: () => void;
+}
+
+export interface GetPossibleStepCoordinatesArgs {
+  coordinates: CoordinatesType;
+  quantity: number;
+  cursorFunction: CursorFunctionType;
 }

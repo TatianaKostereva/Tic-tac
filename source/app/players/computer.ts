@@ -2,21 +2,15 @@ import { DEFAULT_VALUE, FIELD_SIZE } from '../constants/constants';
 import { createConfigForCheckSetStep } from '../helpers/createConfigForCheckSetStep';
 import {
   CoordinatesType,
-  CursorFunctionType,
-  FieldType,
+  GetPossibleStepCoordinatesArgs,
 } from '../helpers/interfaces';
-
-interface GetPossibleStepCoordinatesArgs {
-  coordinates: CoordinatesType;
-  quantity: number;
-  cursorFunction: CursorFunctionType;
-}
+import type Game from '../game';
 
 class Computer {
   public icon: string;
   public game: Record<string, any>;
 
-  constructor(icon: string, game: Record<string, any>) {
+  constructor(icon: string, game: Game) {
     this.icon = icon;
     this.game = game;
   }

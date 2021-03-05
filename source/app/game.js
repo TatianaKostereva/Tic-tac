@@ -61,12 +61,12 @@ class Game {
     return true;
   }
 
-  getStepCoordinates(x, y, cursorFunction) {
+  getStepCoordinates([x, y], cursorFunction) {
     const coordinates = [];
     for (let i = 1; i < this.winLength; i += 1) {
-      const [nextX, nextY] = cursorFunction(x, y, i);
+      const [nextX, nextY] = cursorFunction([x, y], i);
       if (this.field[`${nextX},${nextY}`] === this.activePlayer) {
-        coordinates.push({ x: nextX, y: nextY });
+        coordinates.push([nextX, nextY]);
       }
     }
     return coordinates;
@@ -76,17 +76,15 @@ class Game {
     const config = createConfigForCheckSetStep();
     const lines = Object.values(config).map(lineConfig => {
       const stepForwardCoordinates = this.getStepCoordinates(
-        x,
-        y,
+        [x, y],
         lineConfig.forward,
       );
       const stepBackCoordinates = this.getStepCoordinates(
-        x,
-        y,
+        [x, y],
         lineConfig.back,
       );
 
-      return [{ x, y }].concat(stepForwardCoordinates, stepBackCoordinates);
+      return [[x, y]].concat(stepForwardCoordinates, stepBackCoordinates);
     });
     return lines;
   }
