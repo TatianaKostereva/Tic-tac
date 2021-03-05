@@ -1,15 +1,12 @@
 import './app.scss';
-import Computer from './players/computer.js';
-import Player from './players/player.js';
-import { createConfigForCheckSetStep } from './helpers/createConfigForCheckSetStep.js';
-import { DEFAULT_VALUE, WIN_LENGTH } from './constants/constants.js';
+import Computer from './players/computer';
+import Player from './players/player';
+import { createConfigForCheckSetStep } from './helpers/createConfigForCheckSetStep';
+import { DEFAULT_VALUE, WIN_LENGTH } from './constants/constants';
 
 class Game {
   constructor(FIELD_SIZE, view) {
-    this.players = [
-      new Player('X'),
-      new Computer('O', this),
-    ];
+    this.players = [new Player('X'), new Computer('O', this)];
     this.stepCounter = 0;
     this.activePlayer = -1;
     this.winLength = WIN_LENGTH;
@@ -33,10 +30,13 @@ class Game {
   }
 
   setNextActivePlayer(x, y) {
-    this.activePlayer = (this.activePlayer === this.players.length - 1) ? 0 : this.activePlayer + 1;
+    this.activePlayer = this.activePlayer === this.players.length - 1 ? 0 : this.activePlayer + 1;
 
     if (this.activePlayer === 1) {
-      this.players[this.activePlayer].getCoordinatesFromCoordinatesOfPlayer(x, y);
+      this.players[this.activePlayer].getCoordinatesFromCoordinatesOfPlayer([
+        x,
+        y,
+      ]);
     }
   }
 
@@ -74,11 +74,17 @@ class Game {
 
   getLinesOfStepsCoordinates(x, y) {
     const config = createConfigForCheckSetStep();
-    const lines = Object.values(config).map((lineConfig) => {
-      const stepForwardCoordinates = this
-        .getStepCoordinates(x, y, lineConfig.forward);
-      const stepBackCoordinates = this
-        .getStepCoordinates(x, y, lineConfig.back);
+    const lines = Object.values(config).map(lineConfig => {
+      const stepForwardCoordinates = this.getStepCoordinates(
+        x,
+        y,
+        lineConfig.forward,
+      );
+      const stepBackCoordinates = this.getStepCoordinates(
+        x,
+        y,
+        lineConfig.back,
+      );
 
       return [{ x, y }].concat(stepForwardCoordinates, stepBackCoordinates);
     });
@@ -87,7 +93,9 @@ class Game {
 
   checkWin(x, y) {
     const linesOfStepsCoordinates = this.getLinesOfStepsCoordinates(x, y);
-    const winLine = linesOfStepsCoordinates.find(line => line.length === this.winLength);
+    const winLine = linesOfStepsCoordinates.find(
+      line => line.length === this.winLength,
+    );
 
     if (winLine) {
       return {

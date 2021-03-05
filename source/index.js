@@ -1,6 +1,6 @@
 import './index.scss';
-import App from './app/app.js';
-import { FIELD_SIZE } from './app/constants/constants.js';
+import App from './app/app';
+import { FIELD_SIZE } from './app/constants/constants';
 
 const root = document.querySelector('.root');
 

@@ -1,5 +1,5 @@
-import { DEFAULT_VALUE } from '../constants/constants.js';
-import addElement from '../helpers/addElement.js';
+import { DEFAULT_VALUE } from '../constants/constants';
+import addElement from '../helpers/addElement';
 
 class GameView {
   constructor(root, FIELD_SIZE) {

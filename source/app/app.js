@@ -1,6 +1,6 @@
 import './app.scss';
-import Game from './game.js';
-import GameView from './view/gameView.js';
+import Game from './game';
+import GameView from './view/gameView';
 
 class App {
   constructor(FIELD_SIZE, root) {

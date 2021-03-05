@@ -1,4 +1,4 @@
-import appendElement from './appendElement.js';
+import appendElement from './appendElement';
 
 const addElement = (...args) => {
   const [nameElement, className, parentElement] = args;
