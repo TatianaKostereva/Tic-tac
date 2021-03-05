@@ -34,7 +34,7 @@
     ]
   },
   "include": [
-    "source/**/*.ts", "source/index.js", "source/app/players/player.js",
+    "source/**/*.ts", "source/index.ts", "source/app/players/player.ts",
   ],
   "exclude": [
     "node_modules",

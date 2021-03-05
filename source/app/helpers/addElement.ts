@@ -10,7 +10,7 @@ const addElement = ({
   nameElement,
   className,
   parentElement,
-}: AddElementType): void => {
+}: AddElementType): HTMLElement => {
   const element = document.createElement(nameElement);
   appendElement({ element, className, parentElement });
 

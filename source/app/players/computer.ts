@@ -4,13 +4,13 @@ import {
   CoordinatesType,
   GetPossibleStepCoordinatesArgs,
 } from '../helpers/interfaces';
-import type Game from '../game';
+import type GameType from '../game';
 
 class Computer {
   public icon: string;
   public game: Record<string, any>;
 
-  constructor(icon: string, game: Game) {
+  constructor(icon: string, game: GameType) {
     this.icon = icon;
     this.game = game;
   }

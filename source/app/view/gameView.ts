@@ -15,30 +15,28 @@ class GameView {
     this.fieldSize = FIELD_SIZE;
   }
 
-  createMessage(messageText: string) {
-    const message = addElement({nameElement: 'div', className: 'message', parentElement: this.root});
+  createMessage(messageText: string): void {
+    const message = addElement({ nameElement: 'div', className: 'message', parentElement: this.root });
     message.innerText = `${messageText}`;
   }
 
   renderField(action: actionType): void {
-    const div = addElement({nameElement: 'div', className: 'fieldModel', parentElement: this.root});
-    const field = addElement({nameElement: 'table', className: 'field', parentElement: div});
+    const div = addElement({ nameElement: 'div', className: 'fieldModel', parentElement: this.root });
+    const field = addElement({ nameElement: 'table', className: 'field', parentElement: div });
 
     for (let i = 0; i < this.fieldSize; i += 1) {
-      const row = addElement({nameElement: 'tr', className: 'row', parentElement: field});
+      const row = addElement({ nameElement: 'tr', className: 'row', parentElement: field });
 
       for (let j = 0; j < this.fieldSize; j += 1) {
-        const cell = addElement({nameElement: 'td', className: 'cell', parentElement: row});
-        cell.setAttribute('data-x', i);
-        cell.setAttribute('data-y', j);
+        const cell = addElement({ nameElement: 'td', className: 'cell', parentElement: row });
+        cell.setAttribute('data-x', i.toString());
+        cell.setAttribute('data-y', j.toString());
 
         cell.addEventListener(
-          'click',
-          // FIX: find right type
-          (event: { target: HTMLInputElement }) => {
-            const x = event.target.getAttribute('data-x');
-            const y = event.target.getAttribute('data-y');
-            console.log([Number(x), Number(y)]);
+          'click', (event) => {
+            const target = event.target as Element;
+            const x = target.getAttribute('data-x');
+            const y = target.getAttribute('data-y');
             action([Number(x), Number(y)]);
           },
         );
@@ -58,7 +56,7 @@ class GameView {
   }
 
   renderButton(name: string, action: () => void) {
-    const button = addElement({nameElement: 'button', 'button', this.root});
+    const button = addElement({ nameElement: 'button', className: 'button', parentElement: this.root });
     button.innerText = name;
 
     button.addEventListener('click', () => {
@@ -95,7 +93,7 @@ class GameView {
     occupationCell.classList.add(`cell-${numberOfPlayer}`);
   }
 
-  createLine(coordinates: string[]) {
+  createLine(coordinates: string[]): void {
     let strForClassNameLine = '';
     coordinates.forEach(cellCoordinates => {
       strForClassNameLine += `${cellCoordinates}_`;
@@ -133,7 +131,7 @@ class GameView {
     }
 
     if (numberOfCombination !== '') {
-      addElement({nameElement: 'hr', className: `lineCombination${numberOfCombination}`, parentElement: this.root});
+      addElement({ nameElement: 'hr', className: `lineCombination${numberOfCombination}`, parentElement: this.root });
     }
   }
 }

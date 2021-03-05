@@ -24,7 +24,7 @@ export default () => {
   const config = {
     mode: 'development',
     entry: {
-      index: './source/index.js',
+      index: './source/index.ts',
     },
     output: {
       path: path.resolve(__dirname, './dist'),
