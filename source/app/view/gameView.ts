@@ -93,7 +93,7 @@ class GameView {
     occupationCell.classList.add(`cell-${numberOfPlayer}`);
   }
 
-  createLine(coordinates: string[]): void {
+  createLine(coordinates: number[][]): void {
     let strForClassNameLine = '';
     coordinates.forEach(cellCoordinates => {
       strForClassNameLine += `${cellCoordinates}_`;

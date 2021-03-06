@@ -8,7 +8,7 @@ import type GameType from '../game';
 
 class Computer {
   public icon: string;
-  public game: Record<string, any>;
+  public game: GameType;
 
   constructor(icon: string, game: GameType) {
     this.icon = icon;

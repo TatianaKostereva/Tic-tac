@@ -6,7 +6,7 @@ import { DEFAULT_VALUE, WIN_LENGTH } from './constants/constants';
 import type ViewType from './view/gameView';
 import type PlayerType from './players/player';
 import type ComputerType from './players/computer';
-import { CoordinatesType, CursorFunctionType, FieldType } from './helpers/interfaces';
+import { CoordinatesType, CursorFunctionType, FieldType, winObjectType } from './helpers/interfaces';
 
 class Game {
   public activePlayer: number;
@@ -51,7 +51,6 @@ class Game {
   }
 
   setStep(coordinates: CoordinatesType): Boolean {
-    console.log(coordinates);
     const [x, y] = coordinates;
     if (this.field[`${x},${y}`] !== DEFAULT_VALUE) {
       return false;
@@ -60,14 +59,14 @@ class Game {
     const { icon } = this.players[this.activePlayer];
 
     this.field[`${x},${y}`] = this.activePlayer;
-    console.log(coordinates);
+
     this.view.occupationCell({
       coordinates,
       icon,
       numberOfPlayer: this.activePlayer,
     });
 
-    const win = this.checkWin(coordinates);
+    const win: winObjectType | null = this.checkWin(coordinates);
     if (win) {
       this.stepCounter = 0;
       this.finishGame(win);
@@ -78,8 +77,8 @@ class Game {
     return true;
   }
 
-  getStepCoordinates(coordinates: CoordinatesType, cursorFunction: CursorFunctionType) {
-    const coordinatesArr = [];
+  getStepCoordinates(coordinates: CoordinatesType, cursorFunction: CursorFunctionType): CoordinatesType[] {
+    const coordinatesArr: CoordinatesType[] = [];
     for (let i = 1; i < this.winLength; i += 1) {
       const [nextX, nextY] = cursorFunction(coordinates, i);
       if (this.field[`${nextX},${nextY}`] === this.activePlayer) {
@@ -106,7 +105,7 @@ class Game {
     return lines;
   }
 
-  checkWin(coordinates: CoordinatesType): string | Object | null {
+  checkWin(coordinates: CoordinatesType): winObjectType {
     const linesOfStepsCoordinates = this.getLinesOfStepsCoordinates(
       coordinates,
     );
@@ -118,22 +117,27 @@ class Game {
       return {
         numberOfPlayer: this.activePlayer,
         stepCoordinates: winLine,
+        result: 'Victory',
       };
     }
 
     if (this.stepCounter === this.fieldSize * this.fieldSize) {
-      return 'Draw!';
+      return {
+        numberOfPlayer: this.activePlayer,
+        stepCoordinates: null,
+        result: 'Draw',
+      };
     }
 
     return null;
   }
 
-  finishGame(win: string | {string: number | [] } | null) {
+  finishGame(win: winObjectType | null): Boolean | undefined {
     if (win === null) {
       return undefined;
     }
 
-    if (win === 'Draw!') {
+    if (win.result === 'Draw!') {
       this.view.createMessage('Draw!');
       return false;
     }

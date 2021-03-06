@@ -34,3 +34,9 @@ export type occupationCellArgs = {
   icon: string;
   numberOfPlayer: number;
 };
+
+export type winObjectType = {
+  numberOfPlayer: number,
+  stepCoordinates: number[][] | null,
+  result: string,
+} | null;
