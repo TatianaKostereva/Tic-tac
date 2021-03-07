@@ -1,9 +1,7 @@
-import { DEFAULT_VALUE } from '../constants/constants';
 import addElement from '../helpers/addElement';
 import {
-  actionType,
-  CoordinatesType,
-  occupationCellArgs,
+  ActionType,
+  OccupationCellArgs,
 } from '../helpers/interfaces';
 
 class GameView {
@@ -20,7 +18,7 @@ class GameView {
     message.innerText = `${messageText}`;
   }
 
-  renderField(action: actionType): void {
+  renderField(action: ActionType): void {
     const div = addElement({ nameElement: 'div', className: 'fieldModel', parentElement: this.root });
     const field = addElement({ nameElement: 'table', className: 'field', parentElement: div });
 
@@ -33,7 +31,7 @@ class GameView {
         cell.setAttribute('data-y', j.toString());
 
         cell.addEventListener(
-          'click', (event) => {
+          'click', (event: MouseEvent) => {
             const target = event.target as Element;
             const x = target.getAttribute('data-x');
             const y = target.getAttribute('data-y');
@@ -79,9 +77,9 @@ class GameView {
     coordinates,
     icon,
     numberOfPlayer,
-  }: occupationCellArgs): void {
+  }: OccupationCellArgs): void {
     const [x, y] = coordinates;
-    const occupationCell: HTMLInputElement | null = this.root.querySelector(
+    const occupationCell = this.root.querySelector<HTMLTableDataCellElement>(
       `[data-x='${x}'][data-y='${y}']`,
     );
 

@@ -21,22 +21,22 @@ export type ConfigForCheckType = {
   };
 };
 
-export interface GetPossibleStepCoordinatesArgs {
-  coordinates: CoordinatesType;
-  quantity: number;
-  cursorFunction: CursorFunctionType;
+export type GetPossibleStepCoordinatesArgs = {
+  coordinates: CoordinatesType,
+  quantity: number,
+  cursorFunction: CursorFunctionType
 }
 
-export type actionType = (coordinates: CoordinatesType) => Boolean;
+export type ActionType = (coordinates: CoordinatesType) => Boolean;
 
-export type occupationCellArgs = {
-  coordinates: CoordinatesType;
-  icon: string;
-  numberOfPlayer: number;
+export type OccupationCellArgs = {
+  coordinates: CoordinatesType,
+  icon: string,
+  numberOfPlayer: number
 };
 
-export type winObjectType = {
+export type WinObjectType = {
   numberOfPlayer: number,
-  stepCoordinates: number[][] | null,
-  result: string,
+  stepCoordinates: number[][] | [],
+  result: string
 } | null;

@@ -1,4 +1,4 @@
-import { DEFAULT_VALUE, FIELD_SIZE } from '../constants/constants';
+import { DEFAULT_VALUE } from '../constants/constants';
 import { createConfigForCheckSetStep } from '../helpers/createConfigForCheckSetStep';
 import {
   CoordinatesType,

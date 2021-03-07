@@ -6,7 +6,7 @@ import { DEFAULT_VALUE, WIN_LENGTH } from './constants/constants';
 import type ViewType from './view/gameView';
 import type PlayerType from './players/player';
 import type ComputerType from './players/computer';
-import { CoordinatesType, CursorFunctionType, FieldType, winObjectType } from './helpers/interfaces';
+import { CoordinatesType, CursorFunctionType, FieldType, WinObjectType } from './helpers/interfaces';
 
 class Game {
   public activePlayer: number;
@@ -14,7 +14,7 @@ class Game {
   public fieldSize: number;
   public players: [PlayerType, ComputerType];
   public stepCounter: number;
-  public view: Record<string, any>;
+  public view: ViewType;
   public winLength: number;
 
   constructor(FIELD_SIZE: number, view: ViewType) {
@@ -66,7 +66,7 @@ class Game {
       numberOfPlayer: this.activePlayer,
     });
 
-    const win: winObjectType | null = this.checkWin(coordinates);
+    const win: WinObjectType | null = this.checkWin(coordinates);
     if (win) {
       this.stepCounter = 0;
       this.finishGame(win);
@@ -105,7 +105,7 @@ class Game {
     return lines;
   }
 
-  checkWin(coordinates: CoordinatesType): winObjectType {
+  checkWin(coordinates: CoordinatesType): WinObjectType {
     const linesOfStepsCoordinates = this.getLinesOfStepsCoordinates(
       coordinates,
     );
@@ -124,7 +124,7 @@ class Game {
     if (this.stepCounter === this.fieldSize * this.fieldSize) {
       return {
         numberOfPlayer: this.activePlayer,
-        stepCoordinates: null,
+        stepCoordinates: [],
         result: 'Draw',
       };
     }
@@ -132,7 +132,7 @@ class Game {
     return null;
   }
 
-  finishGame(win: winObjectType | null): Boolean | undefined {
+  finishGame(win: WinObjectType): Boolean | undefined {
     if (win === null) {
       return undefined;
     }
