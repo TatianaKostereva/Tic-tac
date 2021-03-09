@@ -1,4 +1,4 @@
-import appendElement from './appendElement';
+import { appendElement } from './appendElement';
 
 export type AddElementType = {
   nameElement: string;
@@ -17,4 +17,4 @@ const addElement = ({
   return element;
 };
 
-export default addElement;
+export { addElement };

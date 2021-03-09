@@ -3,14 +3,14 @@ import { createConfigForCheckSetStep } from '../helpers/createConfigForCheckSetS
 import {
   CoordinatesType,
   GetPossibleStepCoordinatesArgs,
-} from '../helpers/interfaces';
-import type GameType from '../game';
+} from '../types';
+import type { Game } from '../game';
 
 class Computer {
   public icon: string;
-  public game: GameType;
+  public game: Game;
 
-  constructor(icon: string, game: GameType) {
+  constructor(icon: string, game: Game) {
     this.icon = icon;
     this.game = game;
   }
@@ -21,7 +21,7 @@ class Computer {
     cursorFunction,
   }: GetPossibleStepCoordinatesArgs): CoordinatesType[] {
     const coordinatesArr: CoordinatesType[] = [];
-    const [nextX, nextY] = cursorFunction(coordinates, 1);
+    const [nextX, nextY] = cursorFunction(coordinates, quantity);
     if (this.game.field[`${nextX},${nextY}`] === DEFAULT_VALUE) {
       coordinatesArr.push([nextX, nextY]);
     }
@@ -62,4 +62,4 @@ class Computer {
   }
 }
 
-export default Computer;
+export { Computer };

@@ -1,19 +1,23 @@
 import './app.scss';
-import Game from './game';
-import GameView from './view/gameView';
-import type ViewType from './view/gameView';
-import type GameType from './game';
+import { Game } from './game';
+import { GameView } from './view/gameView';
 
 class App {
   public root: HTMLElement;
-  public view: ViewType;
-  public game: GameType;
+  public view!: GameView;
+  public game!: Game;
+  public fieldSize: number;
 
   constructor(FIELD_SIZE: number, root: HTMLElement) {
     this.root = root;
-    this.view = new GameView(this.root, FIELD_SIZE);
-    this.game = new Game(FIELD_SIZE, this.view);
-    this.view.renderButton('Restart game', this.restartGame.bind(this));
+    this.fieldSize = FIELD_SIZE;
+    this.initApp();
+  }
+
+  initApp() {
+    this.view = new GameView(this.root, this.fieldSize);
+    this.game = new Game(this.fieldSize, this.view);
+    this.view.renderButton('Restart game', () => this.restartGame());
   }
 
   startGame() {
@@ -26,4 +30,4 @@ class App {
   }
 }
 
-export default App;
+export { App };

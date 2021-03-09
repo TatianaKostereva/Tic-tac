@@ -13,4 +13,4 @@ const appendElement = ({
   parentElement.appendChild(element);
 };
 
-export default appendElement;
+export { appendElement };

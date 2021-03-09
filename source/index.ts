@@ -1,5 +1,5 @@
 import './index.scss';
-import App from './app/app';
+import { App } from './app/app';
 import { FIELD_SIZE } from './app/constants/constants';
 
 const root: HTMLElement | null = document.querySelector('.root');

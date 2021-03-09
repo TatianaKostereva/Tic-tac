@@ -1,8 +1,5 @@
-import addElement from '../helpers/addElement';
-import {
-  ActionType,
-  OccupationCellArgs,
-} from '../helpers/interfaces';
+import { addElement } from '../helpers/addElement';
+import { ActionType, OccupationCellArgs } from '../types';
 
 class GameView {
   public root: HTMLElement;
@@ -14,30 +11,48 @@ class GameView {
   }
 
   createMessage(messageText: string): void {
-    const message = addElement({ nameElement: 'div', className: 'message', parentElement: this.root });
+    const message = addElement({
+      nameElement: 'div',
+      className: 'message',
+      parentElement: this.root,
+    });
     message.innerText = `${messageText}`;
   }
 
   renderField(action: ActionType): void {
-    const div = addElement({ nameElement: 'div', className: 'fieldModel', parentElement: this.root });
-    const field = addElement({ nameElement: 'table', className: 'field', parentElement: div });
+    const div = addElement({
+      nameElement: 'div',
+      className: 'fieldModel',
+      parentElement: this.root,
+    });
+    const field = addElement({
+      nameElement: 'table',
+      className: 'field',
+      parentElement: div,
+    });
 
     for (let i = 0; i < this.fieldSize; i += 1) {
-      const row = addElement({ nameElement: 'tr', className: 'row', parentElement: field });
+      const row = addElement({
+        nameElement: 'tr',
+        className: 'row',
+        parentElement: field,
+      });
 
       for (let j = 0; j < this.fieldSize; j += 1) {
-        const cell = addElement({ nameElement: 'td', className: 'cell', parentElement: row });
+        const cell = addElement({
+          nameElement: 'td',
+          className: 'cell',
+          parentElement: row,
+        });
         cell.setAttribute('data-x', i.toString());
         cell.setAttribute('data-y', j.toString());
 
-        cell.addEventListener(
-          'click', (event: MouseEvent) => {
-            const target = event.target as Element;
-            const x = target.getAttribute('data-x');
-            const y = target.getAttribute('data-y');
-            action([Number(x), Number(y)]);
-          },
-        );
+        cell.addEventListener('click', (event: MouseEvent) => {
+          const target = event.target as Element;
+          const x = target.getAttribute('data-x');
+          const y = target.getAttribute('data-y');
+          action([Number(x), Number(y)]);
+        });
       }
     }
   }
@@ -54,7 +69,11 @@ class GameView {
   }
 
   renderButton(name: string, action: () => void) {
-    const button = addElement({ nameElement: 'button', className: 'button', parentElement: this.root });
+    const button = addElement({
+      nameElement: 'button',
+      className: 'button',
+      parentElement: this.root,
+    });
     button.innerText = name;
 
     button.addEventListener('click', () => {
@@ -129,9 +148,13 @@ class GameView {
     }
 
     if (numberOfCombination !== '') {
-      addElement({ nameElement: 'hr', className: `lineCombination${numberOfCombination}`, parentElement: this.root });
+      addElement({
+        nameElement: 'hr',
+        className: `lineCombination${numberOfCombination}`,
+        parentElement: this.root,
+      });
     }
   }
 }
 
-export default GameView;
+export { GameView };
