@@ -21,12 +21,6 @@ export type ConfigForCheckType = {
   };
 };
 
-export type GetPossibleStepCoordinatesArgs = {
-  coordinates: CoordinatesType;
-  quantity: number;
-  cursorFunction: CursorFunctionType;
-};
-
 export type ActionType = (coordinates: CoordinatesType) => void;
 
 export type OccupationCellArgs = {
@@ -38,6 +32,7 @@ export type OccupationCellArgs = {
 export type WinObjectType =
   | {
       result: string;
+      indexOfWinLine?: number;
       numberOfPlayer?: number;
       stepCoordinates?: number[][];
     }

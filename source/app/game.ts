@@ -1,7 +1,7 @@
 import './app.scss';
 import { Computer } from './players/computer';
 import { Player } from './players/player';
-import { createConfigForCheckSetStep } from './helpers/createConfigForCheckSetStep';
+import { configForCheckSetStep } from './helpers/configForCheckSetStep';
 import { DEFAULT_VALUE, WIN_LENGTH } from './constants/constants';
 import type { GameView } from './view/gameView';
 import {
@@ -44,7 +44,7 @@ class Game {
     this.activePlayer = this.activePlayer === this.players.length - 1 ? 0 : this.activePlayer + 1;
 
     if (this.activePlayer === 1) {
-      this.players[this.activePlayer].getCoordinatesFromCoordinatesOfPlayer(
+      this.players[this.activePlayer].getNextStepCoordsFromCoordsOfPlayer(
         coordinates,
       );
     }
@@ -90,8 +90,7 @@ class Game {
   }
 
   getLinesOfStepsCoordinates(coordinates: CoordinatesType): CoordinatesType[][] {
-    const config = createConfigForCheckSetStep();
-    const lines = Object.values(config).map(lineConfig => {
+    const lines = Object.values(configForCheckSetStep).map(lineConfig => {
       const stepForwardCoordinates = this.getStepCoordinates(
         coordinates,
         lineConfig.forward,
@@ -115,8 +114,10 @@ class Game {
     );
 
     if (winLine) {
+      const indexOfWinLine = linesOfStepsCoordinates.indexOf(winLine);
       return {
         result: 'Victory',
+        indexOfWinLine: indexOfWinLine,
         numberOfPlayer: this.activePlayer,
         stepCoordinates: winLine,
       };
@@ -140,11 +141,13 @@ class Game {
       this.view.createMessage(win.result);
     }
 
-    if (win.stepCoordinates !== undefined) {
-      const messageText = (this.activePlayer === 1) ? 'You lost' : 'You won!';
-      this.view.createMessage(messageText);
-      this.view.createLine(win.stepCoordinates);
+    if (win.stepCoordinates === undefined || win.indexOfWinLine === undefined) {
+      return;
     }
+
+    const messageText = (this.activePlayer === 1) ? 'You lost' : 'You won!';
+    this.view.createMessage(messageText);
+    this.view.createLine(win.stepCoordinates, win.indexOfWinLine);
   }
 }
 

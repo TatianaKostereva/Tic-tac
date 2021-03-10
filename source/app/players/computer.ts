@@ -1,8 +1,7 @@
 import { DEFAULT_VALUE } from '../constants/constants';
-import { createConfigForCheckSetStep } from '../helpers/createConfigForCheckSetStep';
+import { configForCheckSetStep } from '../helpers/configForCheckSetStep';
 import {
   CoordinatesType,
-  GetPossibleStepCoordinatesArgs,
 } from '../types';
 import type { Game } from '../game';
 
@@ -15,50 +14,22 @@ class Computer {
     this.game = game;
   }
 
-  getPossibleStepCoordinates({
-    coordinates,
-    quantity,
-    cursorFunction,
-  }: GetPossibleStepCoordinatesArgs): CoordinatesType[] {
-    const coordinatesArr: CoordinatesType[] = [];
-    const [nextX, nextY] = cursorFunction(coordinates, quantity);
-    if (this.game.field[`${nextX},${nextY}`] === DEFAULT_VALUE) {
-      coordinatesArr.push([nextX, nextY]);
-    }
-    return coordinatesArr;
-  }
-
-  getCoordinatesFromCoordinatesOfPlayer(
+  getNextStepCoordsFromCoordsOfPlayer(
     coordinates: CoordinatesType,
-  ): CoordinatesType[] {
-    const config = createConfigForCheckSetStep();
-    const arrOflinesWithCoordinates = Object.values(config).map(lineConfig => {
-      const stepForwardCoordinates = this.getPossibleStepCoordinates({
-        coordinates,
-        quantity: 1,
-        cursorFunction: lineConfig.forward,
-      });
-      const stepBackCoordinates = this.getPossibleStepCoordinates({
-        coordinates,
-        quantity: 1,
-        cursorFunction: lineConfig.back,
-      });
+  ): void {
+    const arrLinesWithCoordinates = Object.values(configForCheckSetStep)
+      .map(lineConfig => [lineConfig.forward(coordinates, 1), lineConfig.back(coordinates, 1)]);
 
-      return stepForwardCoordinates.concat(stepBackCoordinates);
-    });
-
-    const arrWithCoordinates = arrOflinesWithCoordinates.reduce(
+    const arrCoordinates = arrLinesWithCoordinates.reduce(
       (acc, line) => acc.concat(line),
       [],
     );
+    const arrPossibleStepCoordinates = arrCoordinates.filter(([nextX, nextY]) => this.game.field[`${nextX},${nextY}`] === DEFAULT_VALUE);
 
-    const randomNumber = Math.floor(Math.random() * arrWithCoordinates.length);
+    const randomIndex = Math.floor(Math.random() * arrPossibleStepCoordinates.length);
+    const cellForStep = arrPossibleStepCoordinates[randomIndex];
 
-    const cellForStep = arrWithCoordinates[randomNumber];
-    const [x, y] = cellForStep;
-    this.game.setStep([x, y]);
-
-    return arrWithCoordinates;
+    this.game.setStep(cellForStep);
   }
 }
 

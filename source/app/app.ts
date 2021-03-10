@@ -11,13 +11,14 @@ class App {
   constructor(FIELD_SIZE: number, root: HTMLElement) {
     this.root = root;
     this.fieldSize = FIELD_SIZE;
+
     this.initApp();
   }
 
   initApp() {
     this.view = new GameView(this.root, this.fieldSize);
     this.game = new Game(this.fieldSize, this.view);
-    this.view.renderButton('Restart game', () => this.restartGame());
+    this.view.addButton('Restart game', () => this.restartGame());
   }
 
   startGame() {

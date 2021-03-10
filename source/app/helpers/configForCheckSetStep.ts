@@ -1,6 +1,6 @@
 import { ConfigForCheckType, LinesType } from '../types';
 
-export const createConfigForCheckSetStep = (): ConfigForCheckType => ({
+export const configForCheckSetStep: ConfigForCheckType = {
   [LinesType.horizontal]: {
     forward([x, y], quantity) {
       y += quantity;
@@ -45,4 +45,4 @@ export const createConfigForCheckSetStep = (): ConfigForCheckType => ({
       return [x, y];
     },
   },
-});
+};
