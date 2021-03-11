@@ -18,11 +18,12 @@ class App {
   initApp() {
     this.view = new GameView(this.root, this.fieldSize);
     this.game = new Game(this.fieldSize, this.view);
-    this.view.addButton('Restart game', () => this.restartGame());
   }
 
   startGame() {
     this.game.initGame();
+    this.view.createMenu();
+    this.view.addRestartGame('Restart game', () => this.restartGame());
   }
 
   restartGame() {

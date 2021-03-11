@@ -20,11 +20,11 @@ class Game {
   constructor(FIELD_SIZE: number, view: GameView) {
     this.players = [new Player('X'), new Computer('O', this)];
     this.stepCounter = 0;
-    this.activePlayer = 0;
+    this.view = view;
+    this.activePlayer = this.view.addSelectPlayer();
     this.winLength = WIN_LENGTH;
     this.field = {};
     this.fieldSize = FIELD_SIZE;
-    this.view = view;
   }
 
   initGame() {
@@ -56,6 +56,7 @@ class Game {
       return;
     }
     this.stepCounter += 1;
+    console.log(this.activePlayer)
     const { icon } = this.players[this.activePlayer];
 
     this.field[`${x},${y}`] = this.activePlayer;

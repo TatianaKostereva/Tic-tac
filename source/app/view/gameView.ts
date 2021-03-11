@@ -51,15 +51,23 @@ class GameView {
     }
   }
 
-  addButton(name: string, action: () => void) {
-    const button = addElement({
-      nameElement: 'button',
-      className: 'button',
-      parentElement: this.root,
-    });
-    button.innerText = name;
+  addRestartGame(name: string, action: () => void) {
+    const divDropdownContent = this.root.querySelector<HTMLElement>(
+      '.dropdownContent',
+    );
+    if (divDropdownContent === null) {
+      return;
+    }
 
-    button.addEventListener('click', () => {
+    const firstElementContent = addElement({
+      nameElement: 'div',
+      className: 'firstElementContent',
+      parentElement: divDropdownContent,
+    });
+
+    firstElementContent.innerText = name;
+
+    firstElementContent.addEventListener('click', () => {
       const message = this.root.querySelector('.message');
       const line = this.root.querySelector('.line');
 
@@ -72,6 +80,112 @@ class GameView {
       }
 
       action();
+      divDropdownContent.classList.remove('show');
+    });
+
+    this.addFieldSize();
+  }
+
+  addSelectPlayer(): number {
+    let activePlayer = 0;
+    const divDropdownContent = this.root.querySelector<HTMLElement>(
+      '.dropdownContent',
+    );
+
+    if (divDropdownContent === null) {
+      activePlayer = 0;
+      return activePlayer;
+    }
+
+    const addSelectPlayerField = addElement({
+      nameElement: 'div',
+      className: 'secondElementContent',
+      parentElement: divDropdownContent,
+    });
+
+    const selectFirstPlayer = addElement({
+      nameElement: 'a',
+      className: 'selectFirstPlayer',
+      parentElement: addSelectPlayerField,
+    });
+
+    selectFirstPlayer.innerText = 'Select first player';
+
+    const selectPlayerDropdownContent = addElement({
+      nameElement: 'ul',
+      className: 'selectPlayerDropdownContent',
+      parentElement: addSelectPlayerField,
+    });
+
+    const playerField = addElement({
+      nameElement: 'li',
+      className: 'playerField',
+      parentElement: selectPlayerDropdownContent,
+    });
+
+    playerField.innerText = 'Player';
+
+    const computerField = addElement({
+      nameElement: 'li',
+      className: 'computerField',
+      parentElement: selectPlayerDropdownContent,
+    });
+
+    computerField.innerText = 'Computer';
+
+    addSelectPlayerField.addEventListener('click', () => {
+      selectPlayerDropdownContent.classList.toggle('showMore');
+    });
+
+    selectPlayerDropdownContent.addEventListener(
+      'click',
+      (event: MouseEvent) => {
+        const target = event.target as Element;
+        if (target !== null && target.className === 'playerField') {
+          activePlayer = 0;
+          return activePlayer;
+        }
+
+        if (target !== null && target.className === 'computerField') {
+          activePlayer = 1;
+          return activePlayer;
+        }
+      },
+    );
+    return activePlayer;
+  }
+
+  addFieldSize() {
+    const divDropdownContent = this.root.querySelector<HTMLElement>(
+      '.dropdownContent',
+    );
+
+    if (divDropdownContent === null) {
+      return;
+    }
+
+    const addFieldSizeField = addElement({
+      nameElement: 'div',
+      className: 'addFieldSizeField',
+      parentElement: divDropdownContent,
+    });
+
+    addFieldSizeField.innerText = 'Add Field Size';
+
+    addFieldSizeField.addEventListener('click', () => {
+      const divForInput = addElement({
+        nameElement: 'div',
+        className: 'divForInput',
+        parentElement: this.root,
+      });
+
+      const input = addElement({
+        nameElement: 'input',
+        className: 'inputFieldSize',
+        parentElement: divForInput,
+      }) as Element;
+
+      input.type = 'textarea';
     });
   }
 
@@ -149,21 +263,38 @@ class GameView {
         lengthOfLine = lengthOfGorizontalLine;
         const left = coordsOfLineStart.x + halfOfWidthCell;
         const top = coordsOfLineStart.y + halfOfHeightCell - LINE_WIDTH / 2;
-        addStylesForWinLine({ line, lengthOfLine, top, left });
+        addStylesForWinLine({
+          line,
+          lengthOfLine,
+          top,
+          left,
+        });
         break;
       }
       case 1: {
         lengthOfLine = lengthOfVerticalLine;
         const left = coordsOfLineStart.x - halfOfWidthCell - LINE_WIDTH / 2;
         const top = coordsOfLineEnd.y - halfOfHeightCell - LINE_WIDTH;
-        addStylesForWinLine({ line, lengthOfLine, top, left, degOfRotate: 90 });
+        addStylesForWinLine({
+          line,
+          lengthOfLine,
+          top,
+          left,
+          degOfRotate: 90,
+        });
         break;
       }
       case 2: {
         lengthOfLine = Math.round(lengthOfDiagonal);
         const left = coordsOfLineStart.x + LINE_WIDTH - 2;
         const top = coordsOfLineEnd.y - halfOfHeightCell - LINE_WIDTH;
-        addStylesForWinLine({ line, lengthOfLine, top, left, degOfRotate: 45 });
+        addStylesForWinLine({
+          line,
+          lengthOfLine,
+          top,
+          left,
+          degOfRotate: 45,
+        });
         break;
       }
       default: {
@@ -180,6 +311,31 @@ class GameView {
         break;
       }
     }
+  }
+
+  createMenu(): void {
+    const divDropdownMenu = addElement({
+      nameElement: 'div',
+      className: 'dropdownMenu',
+      parentElement: this.root,
+    });
+    const dropButton = addElement({
+      nameElement: 'button',
+      className: 'dropButton',
+      parentElement: divDropdownMenu,
+    });
+    const divDropdownContent = addElement({
+      nameElement: 'div',
+      className: 'dropdownContent',
+      parentElement: divDropdownMenu,
+    });
+
+    dropButton.innerText = 'Menu';
+
+    dropButton.addEventListener('click', event => {
+      divDropdownContent.classList.toggle('show');
+    });
+    this.addSelectPlayer();
   }
 
   clearField() {
