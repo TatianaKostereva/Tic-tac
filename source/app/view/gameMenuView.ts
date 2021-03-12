@@ -3,84 +3,74 @@ import { addStylesForWinLine } from '../helpers/addStylesForWinLine';
 import { ActionType, OccupationCellArgs } from '../types';
 import { WIN_LENGTH, LINE_WIDTH } from '../constants/constants';
 import { sortCoordinates } from '../helpers/sortCoordinates';
+import type { GameView } from './gameView';
 
-class GameView {
+type TButtonConfig = {
+    title: string,
+    action: () => void,
+}
+
+class GameMenuView {
   public root: HTMLElement;
-  public fieldSize: number;
+  private menuNode!: HTMLElement;
+  private menuContent!: HTMLElement;
+  public view: GameView;
 
-  constructor(root: HTMLElement, FIELD_SIZE: number) {
+  constructor(root: HTMLElement, view: GameView) {
     this.root = root;
-    this.fieldSize = FIELD_SIZE;
+    this.view = view;
   }
 
-  renderField(action: ActionType): void {
-    const div = addElement({
+  renderMenu(): void {
+    this.menuNode = addElement({
       nameElement: 'div',
-      className: 'fieldModel',
+      className: 'dropdownMenu',
       parentElement: this.root,
     });
-    const field = addElement({
-      nameElement: 'table',
-      className: 'field',
-      parentElement: div,
+    const dropButton = addElement({
+      nameElement: 'button',
+      className: 'dropButton',
+      parentElement: this.menuNode,
+      innerText: 'Menu',
+    });
+    this.menuContent = addElement({
+      nameElement: 'div',
+      className: 'dropdownContent',
+      parentElement: this.menuNode,
     });
 
-    for (let i = 0; i < this.fieldSize; i += 1) {
-      const row = addElement({
-        nameElement: 'tr',
-        className: 'row',
-        parentElement: field,
-      });
-
-      for (let j = 0; j < this.fieldSize; j += 1) {
-        const cell = addElement({
-          nameElement: 'td',
-          className: 'cell',
-          parentElement: row,
-        });
-        cell.setAttribute('data-x', i.toString());
-        cell.setAttribute('data-y', j.toString());
-
-        cell.addEventListener('click', (event: MouseEvent) => {
-          const target = event.target as Element;
-          const x = target.getAttribute('data-x');
-          const y = target.getAttribute('data-y');
-          action([Number(x), Number(y)]);
-        });
-      }
-    }
+    dropButton.addEventListener('click', event => {
+        this.menuContent.classList.toggle('show');
+    });
   }
 
-  addRestartGame(name: string, action: () => void) {
-    const divDropdownContent = this.root.querySelector<HTMLElement>(
-      '.dropdownContent',
-    );
-    if (divDropdownContent === null) {
-      return;
+  initMenu(buttons: TButtonConfig[]): void {
+    if (this.menuNode) {
+      this.menuNode.remove();
     }
+    this.renderMenu();
+    this.renderButtons(buttons);
+    this.addSelectPlayer();
+  }
 
-    const firstElementContent = addElement({
+  renderButtons(buttons: TButtonConfig[]): void {
+
+  }
+
+  renderButton({title, action}: TButtonConfig) {
+    const elementContent = addElement({
       nameElement: 'div',
       className: 'firstElementContent',
-      parentElement: divDropdownContent,
+      parentElement: this.menuContent,
+      innerText: title,
     });
 
-    firstElementContent.innerText = name;
-
-    firstElementContent.addEventListener('click', () => {
-      const message = this.root.querySelector('.message');
-      const line = this.root.querySelector('.line');
-
-      if (message) {
-        message.remove();
-      }
-
-      if (line) {
-        line.remove();
-      }
+    elementContent.addEventListener('click', () => {
+      this.view.clearMessage;
+      this.view.clearLine;
 
       action();
-      divDropdownContent.classList.remove('show');
+      this.menuContent.classList.remove('show');
     });
 
     this.addFieldSize();
@@ -88,28 +78,19 @@ class GameView {
 
   addSelectPlayer(): number {
     let activePlayer = 0;
-    const divDropdownContent = this.root.querySelector<HTMLElement>(
-      '.dropdownContent',
-    );
-
-    if (divDropdownContent === null) {
-      activePlayer = 0;
-      return activePlayer;
-    }
 
     const addSelectPlayerField = addElement({
       nameElement: 'div',
       className: 'secondElementContent',
-      parentElement: divDropdownContent,
+      parentElement: this.menuContent,
     });
 
     const selectFirstPlayer = addElement({
       nameElement: 'a',
       className: 'selectFirstPlayer',
       parentElement: addSelectPlayerField,
+      innerText: 'Select first player',
     });
-
-    selectFirstPlayer.innerText = 'Select first player';
 
     const selectPlayerDropdownContent = addElement({
       nameElement: 'ul',
@@ -121,17 +102,15 @@ class GameView {
       nameElement: 'li',
       className: 'playerField',
       parentElement: selectPlayerDropdownContent,
+      innerText: 'Player',
     });
-
-    playerField.innerText = 'Player';
 
     const computerField = addElement({
       nameElement: 'li',
       className: 'computerField',
       parentElement: selectPlayerDropdownContent,
+      innerText: 'Computer',
     });
-
-    computerField.innerText = 'Computer';
 
     addSelectPlayerField.addEventListener('click', () => {
       selectPlayerDropdownContent.classList.toggle('showMore');
@@ -156,21 +135,12 @@ class GameView {
   }
 
   addFieldSize() {
-    const divDropdownContent = this.root.querySelector<HTMLElement>(
-      '.dropdownContent',
-    );
-
-    if (divDropdownContent === null) {
-      return;
-    }
-
     const addFieldSizeField = addElement({
       nameElement: 'div',
       className: 'addFieldSizeField',
-      parentElement: divDropdownContent,
+      parentElement: this.menuContent,
+      innerText: 'Add Field Size',
     });
-
-    addFieldSizeField.innerText = 'Add Field Size';
 
     addFieldSizeField.addEventListener('click', () => {
       const divForInput = addElement({
@@ -212,8 +182,8 @@ class GameView {
       nameElement: 'div',
       className: 'message',
       parentElement: this.root,
+      innerText: messageText,
     });
-    message.innerText = `${messageText}`;
   }
 
   createLine(coordinates: number[][], indexOfWinLine: number): void {
@@ -313,31 +283,6 @@ class GameView {
     }
   }
 
-  createMenu(): void {
-    const divDropdownMenu = addElement({
-      nameElement: 'div',
-      className: 'dropdownMenu',
-      parentElement: this.root,
-    });
-    const dropButton = addElement({
-      nameElement: 'button',
-      className: 'dropButton',
-      parentElement: divDropdownMenu,
-    });
-    const divDropdownContent = addElement({
-      nameElement: 'div',
-      className: 'dropdownContent',
-      parentElement: divDropdownMenu,
-    });
-
-    dropButton.innerText = 'Menu';
-
-    dropButton.addEventListener('click', event => {
-      divDropdownContent.classList.toggle('show');
-    });
-    this.addSelectPlayer();
-  }
-
   clearField() {
     const cellElement = Array.from(
       this.root.querySelectorAll<HTMLTableDataCellElement>('.cell'),
@@ -348,20 +293,6 @@ class GameView {
       cell.classList.remove('cell-1');
     });
   }
-
-  clearMessage(): void {
-    const message = this.root.querySelector('.message');
-    if (message) {
-      message.remove();
-    }
-  }
-
-  clearLine(): void {
-    const line = this.root.querySelector('.line');
-    if (line) {
-      line.remove();
-    }
-  }
 }
 
-export { GameView };
+export { GameMenuView };

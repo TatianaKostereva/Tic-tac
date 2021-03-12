@@ -22,7 +22,7 @@ class App {
 
   startGame() {
     this.game.initGame();
-    this.view.createMenu();
+    this.view.renderMenu();
     this.view.addRestartGame('Restart game', () => this.restartGame());
   }
 
