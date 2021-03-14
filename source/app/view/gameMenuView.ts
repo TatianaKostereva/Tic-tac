@@ -5,10 +5,17 @@ import { WIN_LENGTH, LINE_WIDTH } from '../constants/constants';
 import { sortCoordinates } from '../helpers/sortCoordinates';
 import type { GameView } from './gameView';
 
-type TButtonConfig = {
-    title: string,
-    action: () => void,
+type TActionButtonConfig = {
+  title: string,
+  action: () => void,
 }
+
+type TSumMenuConfig = {
+  title: string,
+  children: TActionButtonConfig;
+}
+
+type TMenuElement = TSumMenuConfig | TActionButtonConfig;
 
 class GameMenuView {
   public root: HTMLElement;
@@ -44,66 +51,93 @@ class GameMenuView {
     });
   }
 
-  initMenu(buttons: TButtonConfig[]): void {
+  initMenu(buttons: TMenuElement[]): void {
     if (this.menuNode) {
       this.menuNode.remove();
     }
     this.renderMenu();
     this.renderButtons(buttons);
-    this.addSelectPlayer();
+    //this.addSelectPlayer();
   }
 
-  renderButtons(buttons: TButtonConfig[]): void {
+  renderButtons(buttons: TMenuElement[]): void {
 
   }
 
-  renderButton({title, action}: TButtonConfig) {
-    const elementContent = addElement({
+  renderButton(button: TActionButtonConfig, parent = this.menuContent): HTMLElement {
+    const rowMenuElement = addElement({
       nameElement: 'div',
       className: 'firstElementContent',
-      parentElement: this.menuContent,
-      innerText: title,
+      parentElement: parent,
     });
 
-    elementContent.addEventListener('click', () => {
+    const buttonElement = addElement({
+      nameElement: 'a',
+      className: 'firstElementContent',
+      parentElement: rowMenuElement,
+      innerText: button.title,
+    });
+
+    buttonElement.addEventListener('click', () => {
       this.view.clearMessage;
       this.view.clearLine;
 
-      action();
+      button.action();
       this.menuContent.classList.remove('show');
     });
 
-    this.addFieldSize();
+    //this.addFieldSize();
+    return rowMenuElement;
+  }
+
+  renderSubMenu(subMenu: TSumMenuConfig) {
+    //let activePlayer = 0;
+
+    const rowElement = this.renderButton({
+      title: 'Select first player',
+      action: ()  => {},
+    });
+
+    const subMenuElement = addElement({
+      nameElement: 'div',
+      className: 'selectPlayerDropdownContent',
+      parentElement: rowElement,
+    });
+
+    subMenu.children.forEach((button) => {
+      this.renderButton(button, subMenuElement);
+    })
+
   }
 
   addSelectPlayer(): number {
-    let activePlayer = 0;
+    // let activePlayer = 0;
 
-    const addSelectPlayerField = addElement({
-      nameElement: 'div',
-      className: 'secondElementContent',
-      parentElement: this.menuContent,
-    });
+    // const addSelectPlayerField = addElement({
+    //   nameElement: 'div',
+    //   className: 'secondElementContent',
+    //   parentElement: this.menuContent,
+    // });
 
-    const selectFirstPlayer = addElement({
-      nameElement: 'a',
-      className: 'selectFirstPlayer',
-      parentElement: addSelectPlayerField,
-      innerText: 'Select first player',
-    });
+    // const selectFirstPlayer = addElement({
+    //   nameElement: 'a',
+    //   className: 'selectFirstPlayer',
+    //   parentElement: addSelectPlayerField,
+    //   innerText: 'Select first player',
+    // });
+ 
+    // const selectPlayerDropdownContent = addElement({
+    //   nameElement: 'ul',
+    //   className: 'selectPlayerDropdownContent',
+    //   parentElement: addSelectPlayerField,
+    // });
 
-    const selectPlayerDropdownContent = addElement({
-      nameElement: 'ul',
-      className: 'selectPlayerDropdownContent',
-      parentElement: addSelectPlayerField,
-    });
-
-    const playerField = addElement({
-      nameElement: 'li',
-      className: 'playerField',
-      parentElement: selectPlayerDropdownContent,
-      innerText: 'Player',
-    });
+    // const playerField = addElement({
+    //   nameElement: 'li',
+    //   className: 'playerField',
+    //   parentElement: selectPlayerDropdownContent,
+    //   innerText: 'Player',
+    // });
 
     const computerField = addElement({
       nameElement: 'li',
