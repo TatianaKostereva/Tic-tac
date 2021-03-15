@@ -21,20 +21,20 @@ class Game {
     this.players = [new Player('X'), new Computer('O', this)];
     this.stepCounter = 0;
     this.view = view;
-    this.activePlayer = this.view.addSelectPlayer();
+    this.activePlayer = 0;
     this.winLength = WIN_LENGTH;
     this.field = {};
     this.fieldSize = FIELD_SIZE;
   }
 
-  initGame() {
-    this.generateField();
+  initGame(number: number) {
+    this.generateField(number);
     this.view.renderField(this.setStep.bind(this));
   }
 
-  generateField() {
-    for (let i = 0; i < this.fieldSize; i += 1) {
-      for (let j = 0; j < this.fieldSize; j += 1) {
+  generateField(number: number) {
+    for (let i = 0; i < number; i += 1) {
+      for (let j = 0; j < number; j += 1) {
         this.field[`${i},${j}`] = DEFAULT_VALUE;
       }
     }
@@ -56,7 +56,7 @@ class Game {
       return;
     }
     this.stepCounter += 1;
-    console.log(this.activePlayer)
+    
     const { icon } = this.players[this.activePlayer];
 
     this.field[`${x},${y}`] = this.activePlayer;
@@ -149,6 +149,16 @@ class Game {
     const messageText = (this.activePlayer === 1) ? 'You lost' : 'You won!';
     this.view.createMessage(messageText);
     this.view.createLine(win.stepCoordinates, win.indexOfWinLine);
+  }
+
+  selectPlayer(player: string): void {
+    if (player === 'Player') {
+      return;
+    }
+
+    if (player === 'Computer') {
+      this.setNextActivePlayer([0,0]);
+    }
   }
 }
 

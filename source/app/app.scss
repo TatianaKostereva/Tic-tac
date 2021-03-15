@@ -57,7 +57,7 @@
 
 /* Dropdown Content (Hidden by Default) */
 .dropdownContent,
-.selectPlayerDropdownContent {
+.subMenu-content {
   display: none;
   position: absolute;
   background-color: #f1f1f1;
@@ -65,18 +65,11 @@
   z-index: 1;
 }
 
-.playerField,
-.computerField {
-  list-style-type: none;
-  margin: 10px;
-}
-
 /* Links inside the dropdown */
 .dropdownContent div {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
-  display: block;
 }
 
 /* Change color of dropdown links on hover */
@@ -93,6 +86,7 @@
   display: inline-block;
 }
 
-.inputFieldSize {
-  margin: 150px 0;
+.gameView-input_container {
+  display: block;
+  margin: 20px;
 }

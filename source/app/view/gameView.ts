@@ -51,144 +51,6 @@ class GameView {
     }
   }
 
-  addRestartGame(name: string, action: () => void) {
-    const divDropdownContent = this.root.querySelector<HTMLElement>(
-      '.dropdownContent',
-    );
-    if (divDropdownContent === null) {
-      return;
-    }
-
-    const firstElementContent = addElement({
-      nameElement: 'div',
-      className: 'firstElementContent',
-      parentElement: divDropdownContent,
-    });
-
-    firstElementContent.innerText = name;
-
-    firstElementContent.addEventListener('click', () => {
-      const message = this.root.querySelector('.message');
-      const line = this.root.querySelector('.line');
-
-      if (message) {
-        message.remove();
-      }
-
-      if (line) {
-        line.remove();
-      }
-
-      action();
-      divDropdownContent.classList.remove('show');
-    });
-
-    this.addFieldSize();
-  }
-
-  addSelectPlayer(): number {
-    let activePlayer = 0;
-    const divDropdownContent = this.root.querySelector<HTMLElement>(
-      '.dropdownContent',
-    );
-
-    if (divDropdownContent === null) {
-      activePlayer = 0;
-      return activePlayer;
-    }
-
-    const addSelectPlayerField = addElement({
-      nameElement: 'div',
-      className: 'secondElementContent',
-      parentElement: divDropdownContent,
-    });
-
-    const selectFirstPlayer = addElement({
-      nameElement: 'a',
-      className: 'selectFirstPlayer',
-      parentElement: addSelectPlayerField,
-    });
-
-    selectFirstPlayer.innerText = 'Select first player';
-
-    const selectPlayerDropdownContent = addElement({
-      nameElement: 'ul',
-      className: 'selectPlayerDropdownContent',
-      parentElement: addSelectPlayerField,
-    });
-
-    const playerField = addElement({
-      nameElement: 'li',
-      className: 'playerField',
-      parentElement: selectPlayerDropdownContent,
-    });
-
-    playerField.innerText = 'Player';
-
-    const computerField = addElement({
-      nameElement: 'li',
-      className: 'computerField',
-      parentElement: selectPlayerDropdownContent,
-    });
-
-    computerField.innerText = 'Computer';
-
-    addSelectPlayerField.addEventListener('click', () => {
-      selectPlayerDropdownContent.classList.toggle('showMore');
-    });
-
-    selectPlayerDropdownContent.addEventListener(
-      'click',
-      (event: MouseEvent) => {
-        const target = event.target as Element;
-        if (target !== null && target.className === 'playerField') {
-          activePlayer = 0;
-          return activePlayer;
-        }
-
-        if (target !== null && target.className === 'computerField') {
-          activePlayer = 1;
-          return activePlayer;
-        }
-      },
-    );
-    return activePlayer;
-  }
-
-  addFieldSize() {
-    const divDropdownContent = this.root.querySelector<HTMLElement>(
-      '.dropdownContent',
-    );
-
-    if (divDropdownContent === null) {
-      return;
-    }
-
-    const addFieldSizeField = addElement({
-      nameElement: 'div',
-      className: 'addFieldSizeField',
-      parentElement: divDropdownContent,
-    });
-
-    addFieldSizeField.innerText = 'Add Field Size';
-
-    addFieldSizeField.addEventListener('click', () => {
-      const divForInput = addElement({
-        nameElement: 'div',
-        className: 'divForInput',
-        parentElement: this.root,
-      });
-
-      const input = addElement({
-        nameElement: 'input',
-        className: 'inputFieldSize',
-        parentElement: divForInput,
-      }) as Element;
-
-      input.type = 'textarea';
-    });
-  }
-
   occupationCell({
     coordinates,
     icon,
@@ -313,29 +175,28 @@ class GameView {
     }
   }
 
-  createMenu(): void {
-    const divDropdownMenu = addElement({
+  inputFieldSize(): void {
+    const divForInput = addElement({
       nameElement: 'div',
-      className: 'dropdownMenu',
+      className: 'gameView-input_container',
       parentElement: this.root,
     });
-    const dropButton = addElement({
-      nameElement: 'button',
-      className: 'dropButton',
-      parentElement: divDropdownMenu,
-    });
-    const divDropdownContent = addElement({
-      nameElement: 'div',
-      className: 'dropdownContent',
-      parentElement: divDropdownMenu,
-    });
 
-    dropButton.innerText = 'Menu';
+    const input = addElement({
+      nameElement: 'input',
+      className: 'gameView-input',
+      parentElement: divForInput,
+    }) as Element;
 
-    dropButton.addEventListener('click', event => {
-      divDropdownContent.classList.toggle('show');
-    });
-    this.addSelectPlayer();
+    input.type = 'text';
+
+    const button = addElement({
+      nameElement: 'input',
+      className: 'gameView-input',
+      parentElement: divForInput,
+    }) as Element;
+
+    button.type = 'button';
   }
 
   clearField() {
