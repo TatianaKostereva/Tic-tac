@@ -194,12 +194,20 @@ class GameView {
       nameElement: 'input',
       className: 'gameView-input',
       parentElement: inputContainer,
-    });
+    }) as HTMLInputElement;
 
-    inputEl.addEventListener('input', ({ target }) => {
-      const { value } = target as HTMLInputElement;
+    const inputButton = addElement({
+      nameElement: 'input',
+      className: 'gameView-input-button',
+      parentElement: inputContainer,
+    }) as HTMLInputElement;
 
-      action(value);
+    inputButton.setAttribute('type', 'button');
+    inputButton.value = 'Send';
+
+    inputButton.addEventListener('click', ({ target }) => {
+      const fieldSize = inputEl.value;
+      action(fieldSize);
     });
   }
 
