@@ -6,7 +6,7 @@ import { DEFAULT_VALUE, WIN_LENGTH } from './constants/constants';
 import type { GameView } from './view/gameView';
 import {
   CoordinatesType, CursorFunctionType, FieldType, WinObjectType,
-} from './types';
+} from './types/types';
 
 class Game {
   public activePlayer: number;
@@ -27,14 +27,14 @@ class Game {
     this.fieldSize = FIELD_SIZE;
   }
 
-  initGame(number: number) {
-    this.generateField(number);
-    this.view.renderField(this.setStep.bind(this));
+  initGame(fieldSize: number) {
+    this.generateField(fieldSize);
+    this.view.renderField(fieldSize, this.setStep.bind(this));
   }
 
-  generateField(number: number) {
-    for (let i = 0; i < number; i += 1) {
-      for (let j = 0; j < number; j += 1) {
+  generateField(fieldSize: number) {
+    for (let i = 0; i < fieldSize; i += 1) {
+      for (let j = 0; j < fieldSize; j += 1) {
         this.field[`${i},${j}`] = DEFAULT_VALUE;
       }
     }

@@ -2,7 +2,7 @@ import { DEFAULT_VALUE } from '../constants/constants';
 import { configForCheckSetStep } from '../helpers/configForCheckSetStep';
 import {
   CoordinatesType,
-} from '../types';
+} from '../types/types';
 import type { Game } from '../game';
 
 class Computer {

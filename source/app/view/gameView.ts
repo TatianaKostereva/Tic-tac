@@ -1,6 +1,7 @@
 import { addElement } from '../helpers/addElement';
+import { deleteElement } from '../helpers/deleteElement';
 import { addStylesForWinLine } from '../helpers/addStylesForWinLine';
-import { ActionType, OccupationCellArgs } from '../types';
+import { ActionType, OccupationCellArgs } from '../types/types';
 import { WIN_LENGTH, LINE_WIDTH } from '../constants/constants';
 import { sortCoordinates } from '../helpers/sortCoordinates';
 
@@ -13,7 +14,7 @@ class GameView {
     this.fieldSize = FIELD_SIZE;
   }
 
-  renderField(action: ActionType): void {
+  renderField(fieldSize: number = this.fieldSize, action: ActionType): void {
     const div = addElement({
       nameElement: 'div',
       className: 'fieldModel',
@@ -25,14 +26,14 @@ class GameView {
       parentElement: div,
     });
 
-    for (let i = 0; i < this.fieldSize; i += 1) {
+    for (let i = 0; i < fieldSize; i += 1) {
       const row = addElement({
         nameElement: 'tr',
         className: 'row',
         parentElement: field,
       });
 
-      for (let j = 0; j < this.fieldSize; j += 1) {
+      for (let j = 0; j < fieldSize; j += 1) {
         const cell = addElement({
           nameElement: 'td',
           className: 'cell',
@@ -74,8 +75,8 @@ class GameView {
       nameElement: 'div',
       className: 'message',
       parentElement: this.root,
+      innerText: messageText,
     });
-    message.innerText = `${messageText}`;
   }
 
   createLine(coordinates: number[][], indexOfWinLine: number): void {
@@ -175,53 +176,52 @@ class GameView {
     }
   }
 
-  inputFieldSize(): void {
-    const divForInput = addElement({
+  inputInit(action: any): void {
+    const inputContainer = addElement({
       nameElement: 'div',
       className: 'gameView-input_container',
       parentElement: this.root,
     });
 
-    const input = addElement({
+    const inputTextContainer = addElement({
+      nameElement: 'div',
+      className: 'gameView-input-text_container',
+      parentElement: inputContainer,
+      innerText: 'Input field size:',
+    });
+
+    const inputEl = addElement({
       nameElement: 'input',
       className: 'gameView-input',
-      parentElement: divForInput,
-    }) as Element;
+      parentElement: inputContainer,
+    });
 
-    input.type = 'text';
+    inputEl.addEventListener('input', ({ target }) => {
+      const { value } = target as HTMLInputElement;
 
-    const button = addElement({
-      nameElement: 'input',
-      className: 'gameView-input',
-      parentElement: divForInput,
-    }) as Element;
-
-    button.type = 'button';
-  }
-
-  clearField() {
-    const cellElement = Array.from(
-      this.root.querySelectorAll<HTMLTableDataCellElement>('.cell'),
-    );
-    cellElement.forEach(cell => {
-      cell.innerText = '';
-      cell.classList.remove('cell-0');
-      cell.classList.remove('cell-1');
+      action(value);
     });
   }
 
-  clearMessage(): void {
-    const message = this.root.querySelector('.message');
-    if (message) {
-      message.remove();
-    }
+  deleteField() {
+    deleteElement(this.root, 'field');
+    deleteElement(this.root, 'fieldModel');
   }
 
-  clearLine(): void {
-    const line = this.root.querySelector('.line');
-    if (line) {
-      line.remove();
-    }
+  deleteMessage(): void {
+    deleteElement(this.root, 'message');
+  }
+
+  deleteLine(): void {
+    deleteElement(this.root, 'line');
+  }
+
+  deleteMenu(): void {
+    deleteElement(this.root, 'dropdownMenu');
+  }
+
+  deleteInput(): void {
+    deleteElement(this.root, 'gameView-input_container');
   }
 }
 

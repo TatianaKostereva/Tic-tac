@@ -37,3 +37,25 @@ export type WinObjectType =
       stepCoordinates?: number[][];
     }
   | false;
+
+export enum MenuElementTypes {
+  action = 'action',
+  subMenu = 'subMenu',
+}
+
+export interface MenuBaseElement {
+  type: MenuElementTypes;
+  title: string;
+}
+
+export interface ActionButtonConfig extends MenuBaseElement {
+  type: MenuElementTypes.action;
+  action: () => void;
+}
+
+export interface SubMenuConfig extends MenuBaseElement {
+  type: MenuElementTypes.subMenu;
+  children: ActionButtonConfig[];
+}
+
+export type TMenuElement = SubMenuConfig | ActionButtonConfig;

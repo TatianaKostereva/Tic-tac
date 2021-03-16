@@ -1,4 +1,4 @@
-import { ConfigForCheckType, LinesType } from '../types';
+import { ConfigForCheckType, LinesType } from '../types/types';
 
 export const configForCheckSetStep: ConfigForCheckType = {
   [LinesType.horizontal]: {

@@ -1,33 +1,18 @@
 import { addElement } from '../helpers/addElement';
 import { GameView } from './gameView';
-
-export enum MenuElementTypes {
-  action = 'action',
-  subMenu = 'subMenu',
-}
-
-interface MenuBaseElement {
-  type: MenuElementTypes;
-  title: string;
-}
-
-interface ActionButtonConfig extends MenuBaseElement {
-  type: MenuElementTypes.action;
-  action: () => void;
-}
-
-interface SubMenuConfig extends MenuBaseElement {
-  type: MenuElementTypes.subMenu;
-  children: ActionButtonConfig[];
-}
-
-type TMenuElement = SubMenuConfig | ActionButtonConfig;
+import {
+  MenuElementTypes,
+  ActionButtonConfig,
+  SubMenuConfig,
+  TMenuElement,
+} from '../types/types';
 
 class GameMenu {
   public root: HTMLElement;
   public fieldSize: number;
   private menuNode!: HTMLElement;
   private menuContent!: HTMLElement;
+  private subMenuElement!: HTMLElement;
   public view: GameView;
 
   constructor(root: HTMLElement, FIELD_SIZE: number, view: GameView) {
@@ -96,34 +81,36 @@ class GameMenu {
     });
 
     buttonElement.addEventListener('click', () => {
-      this.view.clearMessage();
-      this.view.clearLine();
+      this.view.deleteMessage();
+      this.view.deleteLine();
 
       button.action();
+      this.menuContent.classList.remove('show');
+      this.subMenuElement.classList.remove('showMore');
     });
 
     return rowMenuElement;
   }
 
   renderSubMenu(subMenu: SubMenuConfig) {
-    let subMenuElement: HTMLElement;
-
     const rowElement = this.renderButton({
       type: MenuElementTypes.action,
       title: subMenu.title,
-      action: () => {
-        subMenuElement.classList.toggle('showMore');
-      },
+      action: () => {},
     });
 
-    subMenuElement = addElement({
+    this.subMenuElement = addElement({
       nameElement: 'div',
       className: 'subMenu-content',
       parentElement: rowElement,
     });
 
+    rowElement.addEventListener('mouseenter', () => {
+      this.subMenuElement.classList.toggle('showMore');
+    });
+
     subMenu.children.forEach((button: ActionButtonConfig) => {
-      this.renderButton(button, subMenuElement);
+      this.renderButton(button, this.subMenuElement);
     });
   }
 }
