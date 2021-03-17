@@ -1,4 +1,3 @@
-import './app.scss';
 import { Computer } from './players/computer';
 import { Player } from './players/player';
 import { configForCheckSetStep } from './helpers/configForCheckSetStep';
@@ -7,7 +6,8 @@ import type { GameView } from './view/gameView';
 import {
   CoordinatesType, CursorFunctionType, FieldType, WinObjectType,
 } from './types/types';
-import { GameCounters } from './view/gameCounters';
+
+import './styles/app.scss';
 
 class Game {
   public activePlayer: number;
@@ -26,7 +26,6 @@ class Game {
     this.winLength = WIN_LENGTH;
     this.field = {};
     this.fieldSize = FIELD_SIZE;
-    this.playerCounter = new GameCounters(this.stepCounter);
   }
 
   initGame(fieldSize: number) {
@@ -58,7 +57,6 @@ class Game {
       return;
     }
     this.stepCounter += 1;
-    console.log(this.playerCounter);
     
     const { icon } = this.players[this.activePlayer];
 

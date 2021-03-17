@@ -9,15 +9,12 @@ import {
 
 class GameMenu {
   public root: HTMLElement;
-  public fieldSize: number;
   private menuNode!: HTMLElement;
   private menuContent!: HTMLElement;
-  private subMenuElement!: HTMLElement;
   public view: GameView;
 
-  constructor(root: HTMLElement, FIELD_SIZE: number, view: GameView) {
+  constructor(root: HTMLElement, view: GameView) {
     this.root = root;
-    this.fieldSize = FIELD_SIZE;
     this.view = view;
   }
 
@@ -51,13 +48,13 @@ class GameMenu {
     this.renderMenu();
     config.forEach(item => {
       switch (item.type) {
-        case MenuElementTypes.action:
-          {
-            this.renderButton(item);
-          }
+        case MenuElementTypes.action: {
+          this.renderButton(item);
           break;
+        }
         case MenuElementTypes.subMenu: {
           this.renderSubMenu(item);
+          break;
         }
       }
     });
@@ -81,12 +78,9 @@ class GameMenu {
     });
 
     buttonElement.addEventListener('click', () => {
-      this.view.deleteMessage();
-      this.view.deleteLine();
-
       button.action();
+
       this.menuContent.classList.remove('show');
-      this.subMenuElement.classList.remove('showMore');
     });
 
     return rowMenuElement;
@@ -99,18 +93,14 @@ class GameMenu {
       action: () => {},
     });
 
-    this.subMenuElement = addElement({
+    const subMenuElement = addElement({
       nameElement: 'div',
       className: 'subMenu-content',
       parentElement: rowElement,
     });
 
-    rowElement.addEventListener('mouseenter', () => {
-      this.subMenuElement.classList.toggle('showMore');
-    });
-
     subMenu.children.forEach((button: ActionButtonConfig) => {
-      this.renderButton(button, this.subMenuElement);
+      this.renderButton(button, subMenuElement);
     });
   }
 }

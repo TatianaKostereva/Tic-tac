@@ -1,8 +1,9 @@
-import './app.scss';
 import { Game } from './game';
 import { GameView } from './view/gameView';
 import { GameMenu } from './view/gameMenu';
-import { MenuButtons } from './view/menuButtons';
+import { MenuButtons } from './view/gameMenuButtons';
+
+import './styles/app.scss';
 
 class App {
   public root: HTMLElement;
@@ -22,30 +23,35 @@ class App {
   initApp() {
     this.view = new GameView(this.root, this.fieldSize);
     this.game = new Game(this.fieldSize, this.view);
-    this.menu = new GameMenu(this.root, this.fieldSize, this.view);
+    this.menu = new GameMenu(this.root, this.view);
   }
 
-  startGame(fieldSize: number = this.fieldSize) {
+  startGame = (fieldSize: number = this.fieldSize) => {
     this.game.initGame(fieldSize);
     this.menu.renderMenu();
 
     this.buttons = new MenuButtons(this.view, this.game);
 
     this.menu.initMenu([
-      this.buttons.restartGame(this.restartGame.bind(this), fieldSize),
+      this.buttons.restartGame(this.restartGame),
       this.buttons.selectFirstPlayer(),
-      this.buttons.changeFieldSize(this.restartGame.bind(this)),
+      this.buttons.changeFieldSize(this.changeFieldSize),
     ]);
-  }
+  };
 
-  restartGame(fieldSize: number = this.fieldSize) {
-    this.game.generateField(fieldSize);
+  changeFieldSize = (fieldSize: number) => {
+    this.fieldSize = fieldSize;
+    this.restartGame();
+  };
+
+  restartGame = () => {
+    this.game.generateField(this.fieldSize);
     this.view.deleteField();
 
     this.view.deleteMenu();
     this.view.deleteInput();
-    this.startGame(fieldSize);
-  }
+    this.startGame(this.fieldSize);
+  };
 }
 
 export { App };

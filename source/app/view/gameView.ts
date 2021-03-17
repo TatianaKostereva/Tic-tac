@@ -176,7 +176,7 @@ class GameView {
     }
   }
 
-  inputInit(action: any): void {
+  inputInit(callback: any): void {
     const inputContainer = addElement({
       nameElement: 'div',
       className: 'gameView-input_container',
@@ -207,7 +207,7 @@ class GameView {
 
     inputButton.addEventListener('click', ({ target }) => {
       const fieldSize = inputEl.value;
-      action(fieldSize);
+      callback(fieldSize);
     });
   }
 

@@ -66,24 +66,29 @@
 }
 
 /* Links inside the dropdown */
-.dropdownContent div {
+.dropdownContent .menu-content_container {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
+  position: relative;
+  cursor: pointer;
 }
 
 /* Change color of dropdown links on hover */
-.dropdownContent a:hover {
+.dropdownContent .menu-content_container:hover {
   background-color: #ddd;
 }
 
-/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-.show {
+.menu-content_container:hover .subMenu-content {
   display: block;
+  position: absolute;
+  top: 0;
+  padding: 0;
+  right: -159px;
 }
 
-.showMore {
-  display: inline-block;
+.show {
+  display: block;
 }
 
 .gameView-input_container {

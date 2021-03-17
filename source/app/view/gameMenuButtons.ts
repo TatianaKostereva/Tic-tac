@@ -15,12 +15,14 @@ class MenuButtons {
     this.game = game;
   }
 
-  restartGame(action: any, fieldSize: number): ActionButtonConfig {
+  restartGame(callback: (param?: any) => any): ActionButtonConfig {
     return {
       type: MenuElementTypes.action,
       title: 'Restart game',
       action: () => {
-        action(fieldSize);
+        this.view.deleteMessage();
+        this.view.deleteLine();
+        callback();
       },
     };
   }
@@ -48,12 +50,12 @@ class MenuButtons {
     };
   }
 
-  changeFieldSize(action: any): ActionButtonConfig {
+  changeFieldSize(callback: (param?: any) => any): ActionButtonConfig {
     return {
       type: MenuElementTypes.action,
       title: 'Change field size',
       action: () => {
-        this.view.inputInit(action);
+        this.view.inputInit(callback);
       },
     };
   }
