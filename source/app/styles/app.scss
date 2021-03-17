@@ -103,3 +103,16 @@
 .gameView-input-button {
   width: 60px;
 }
+
+.counter_container-player,
+.counter_container-computer {
+  display: inline-block;
+  margin: 0 50px;
+  text-align: center;
+}
+
+.stepMessage {
+  display: inline-block;
+  margin: 0 100px;
+  text-align: center;
+}

@@ -1,13 +1,20 @@
 import { addElement } from '../helpers/addElement';
 import { deleteElement } from '../helpers/deleteElement';
 import { addStylesForWinLine } from '../helpers/addStylesForWinLine';
-import { ActionType, OccupationCellArgs } from '../types/types';
+import {
+  ActionType,
+  OccupationCellArgs,
+  stepCounterType,
+} from '../types/types';
 import { WIN_LENGTH, LINE_WIDTH } from '../constants/constants';
 import { sortCoordinates } from '../helpers/sortCoordinates';
+import { GameCountersView } from './gameCountersView';
 
 class GameView {
   public root: HTMLElement;
   public fieldSize: number;
+  public counterView!: GameCountersView;
+  public counter!: stepCounterType;
 
   constructor(root: HTMLElement, FIELD_SIZE: number) {
     this.root = root;
@@ -209,6 +216,53 @@ class GameView {
       const fieldSize = inputEl.value;
       callback(fieldSize);
     });
+  }
+
+  renderCounter(counter: stepCounterType) {
+    this.counter = counter;
+    this.counterView = new GameCountersView(this.root, counter);
+
+    const container = addElement({
+      nameElement: 'div',
+      className: 'statisticContainer',
+      parentElement: this.root,
+    });
+
+    this.counterView.renderCounters('Player');
+    this.counterView.renderCounters('Computer');
+  }
+
+  rerenderCounters() {
+    const counterContainerPlayer = this.root.querySelector(
+      '.counter_container-player .counter',
+    ) as HTMLDivElement;
+    const counterContainerComputer = this.root.querySelector(
+      '.counter_container-computer .counter',
+    ) as HTMLElement;
+
+    counterContainerPlayer?.innerText = this.counter['0']?.toString();
+    counterContainerComputer?.innerText = this.counter['1']?.toString();
+  }
+
+  renderStepMessage(stepMessageText: string) {
+    const statisticContainer = this.root.querySelector('.statisticContainer');
+    if (statisticContainer) {
+      const stepMessage = addElement({
+        nameElement: 'div',
+        className: 'stepMessage',
+        parentElement: statisticContainer,
+        innerText: stepMessageText,
+      });
+    }
+  }
+
+  deleteStepMessage() {
+    deleteElement(this.root, 'stepMessage');
+  }
+
+  deleteCounters() {
+    deleteElement(this.root, 'counter_container-player');
+    deleteElement(this.root, 'counter_container-computer');
   }
 
   deleteField() {

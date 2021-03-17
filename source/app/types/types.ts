@@ -59,3 +59,14 @@ export interface SubMenuConfig extends MenuBaseElement {
 }
 
 export type TMenuElement = SubMenuConfig | ActionButtonConfig;
+
+export type stepCounterType = {
+  '0'?: number;
+  '1'?: number;
+};
+
+export type eventType = {
+  type: string;
+  playerIndex: number;
+  coords: number[];
+};

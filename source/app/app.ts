@@ -2,6 +2,7 @@ import { Game } from './game';
 import { GameView } from './view/gameView';
 import { GameMenu } from './view/gameMenu';
 import { MenuButtons } from './view/gameMenuButtons';
+import { EventObserver } from './helpers/EventObserver';
 
 import './styles/app.scss';
 
@@ -12,17 +13,19 @@ class App {
   public menu!: GameMenu;
   public fieldSize: number;
   public buttons!: MenuButtons;
+  public observer: any;
 
   constructor(FIELD_SIZE: number, root: HTMLElement) {
     this.root = root;
     this.fieldSize = FIELD_SIZE;
+    this.observer = new EventObserver();
 
     this.initApp();
   }
 
   initApp() {
     this.view = new GameView(this.root, this.fieldSize);
-    this.game = new Game(this.fieldSize, this.view);
+    this.game = new Game(this.fieldSize, this.view, this.observer);
     this.menu = new GameMenu(this.root, this.view);
   }
 
@@ -48,6 +51,8 @@ class App {
     this.game.generateField(this.fieldSize);
     this.view.deleteField();
 
+    this.view.deleteStepMessage();
+    this.view.deleteCounters();
     this.view.deleteMenu();
     this.view.deleteInput();
     this.startGame(this.fieldSize);
