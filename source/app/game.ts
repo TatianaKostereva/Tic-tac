@@ -37,8 +37,8 @@ class Game {
     this.view.renderCounter(this.counter.stepCounter);
     this.view.renderField(fieldSize, this.setStep);
 
-    const stepMessageText = (this.activePlayer === 0) ? 'Player step': 'Computer step';
-    this.view.renderStepMessage(stepMessageText)
+    const stepMessageText = (this.activePlayer === 0) ? 'Player step' : 'Computer step';
+    this.view.renderStepMessage(stepMessageText);
 
     this.observer.subscribe(this.counter.getQuantitySteps);
   }
@@ -66,7 +66,7 @@ class Game {
     if (this.field[`${x},${y}`] !== DEFAULT_VALUE) {
       return;
     }
-
+    
     this.observer.addEvent({
       type: 'player_step',
       playerIndex: this.activePlayer,
@@ -78,7 +78,7 @@ class Game {
     this.view.deleteStepMessage();
     const stepMessageText = (this.activePlayer === 0) ? 'Computer step' : 'Player step';
     this.view.renderStepMessage(stepMessageText);
-    
+
     const { icon } = this.players[this.activePlayer];
     this.field[`${x},${y}`] = this.activePlayer;
 
@@ -144,7 +144,8 @@ class Game {
       };
     }
 
-    if (this.counter.stepCounter[0] + this.counter.stepCounter[1] === this.fieldSize * this.fieldSize) {
+    if (this.counter.stepCounter[0] + this.counter.stepCounter[1]
+      === this.fieldSize * this.fieldSize) {
       return {
         result: 'Draw',
       };
@@ -177,7 +178,7 @@ class Game {
     }
 
     if (player === 'Computer') {
-      this.setNextActivePlayer([0,0]);
+      this.setNextActivePlayer([0, 0]);
     }
   }
 }

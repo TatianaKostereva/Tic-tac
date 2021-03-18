@@ -25,7 +25,8 @@ class GameCountersView {
     });
 
     let text = name === 'Player' ? this.counter[0] : this.counter[1];
-    if (text === undefined) {
+
+    if (this.counter[0] === undefined) {
       text = 0;
     }
 

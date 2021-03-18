@@ -214,7 +214,12 @@ class GameView {
 
     inputButton.addEventListener('click', ({ target }) => {
       const fieldSize = inputEl.value;
-      callback(fieldSize);
+
+      if (+inputEl.value <= 20 && +inputEl.value >= 3) {
+        callback(fieldSize);
+      } else {
+        throw new Error('Set value between 3 and 20');
+      }
     });
   }
 
@@ -235,17 +240,32 @@ class GameView {
   rerenderCounters() {
     const counterContainerPlayer = this.root.querySelector(
       '.counter_container-player .counter',
-    ) as HTMLDivElement;
+    ) as HTMLDivElement | undefined;
     const counterContainerComputer = this.root.querySelector(
       '.counter_container-computer .counter',
     ) as HTMLElement;
 
-    counterContainerPlayer?.innerText = this.counter['0']?.toString();
-    counterContainerComputer?.innerText = this.counter['1']?.toString();
+    let text = this.counter['0']?.toString() as string;
+
+    if (this.counter[0] === undefined) {
+      text = '0';
+    }
+
+    if (counterContainerPlayer) {
+      counterContainerPlayer.innerText = text;
+    }
+
+    text = this.counter['1']?.toString() as string;
+
+    if (counterContainerPlayer) {
+      counterContainerComputer.innerText = text;
+    }
   }
 
   renderStepMessage(stepMessageText: string) {
-    const statisticContainer = this.root.querySelector('.statisticContainer');
+    const statisticContainer = this.root.querySelector(
+      '.statisticContainer',
+    ) as HTMLElement;
     if (statisticContainer) {
       const stepMessage = addElement({
         nameElement: 'div',

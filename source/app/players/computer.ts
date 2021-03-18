@@ -17,13 +17,24 @@ class Computer {
   getNextStepCoordsFromCoordsOfPlayer(
     coordinates: CoordinatesType,
   ): void {
-    const arrLinesWithCoordinates = Object.values(configForCheckSetStep)
+    const arrLinesWithCoordinatesForOneStep = Object.values(configForCheckSetStep)
       .map(lineConfig => [lineConfig.forward(coordinates, 1), lineConfig.back(coordinates, 1)]);
 
-    const arrCoordinates = arrLinesWithCoordinates.reduce(
+    const arrLinesWithCoordinatesForTwoStep = Object.values(configForCheckSetStep)
+      .map(lineConfig => [lineConfig.forward(coordinates, 2), lineConfig.back(coordinates, 2)]);
+
+    const arrCoordinatesForOneStep = arrLinesWithCoordinatesForOneStep.reduce(
       (acc, line) => acc.concat(line),
       [],
     );
+
+    const arrCoordinatesForTwoStep = arrLinesWithCoordinatesForTwoStep.reduce(
+      (acc, line) => acc.concat(line),
+      [],
+    );
+
+    const arrCoordinates = arrCoordinatesForOneStep.concat(arrCoordinatesForTwoStep);
+
     const arrPossibleStepCoordinates = arrCoordinates.filter(([nextX, nextY]) => this.game.field[`${nextX},${nextY}`] === DEFAULT_VALUE);
 
     const randomIndex = Math.floor(Math.random() * arrPossibleStepCoordinates.length);
